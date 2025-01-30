@@ -4,7 +4,7 @@ import { useLoadScript, GoogleMap, DirectionsRenderer, Marker } from '@react-goo
 import Geocode from "react-geocode";
 
 // Google Maps API key
-const googleMapsAPIKey = 'AIzaSyD9Iv6r7bGnfhpEfSqovhLdQ4m5nrY75pI';
+const googleMapsAPIKey = '';
 
 // Define the libraries outside the component to avoid unnecessary re-renders
 const libraries = ['places', 'directions'];
