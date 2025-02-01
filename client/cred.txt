@@ -1,1 +1,2 @@
-AIzaSyD9Iv6r7bGnfhpEfSqovhLdQ4m5nrY75pI
+const apiKey = "eSOtS524rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc";
+eSOtS524rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc
