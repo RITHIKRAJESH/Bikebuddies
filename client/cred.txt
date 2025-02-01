@@ -1,2 +1,1 @@
-const apiKey = "eSOtS524rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc";
-eSOtS524rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc
+
