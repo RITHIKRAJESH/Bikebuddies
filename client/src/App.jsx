@@ -5,6 +5,9 @@ import LoginPage from './components/Loginpage'; // Import LoginPage component
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import BookRide from './components/Bookride';
+import Riderhome from './components/rider/Riderhome';
+import Viewvehicles from './components/rider/viewvehicles';
+import Addvehicle from './components/rider/addvehicle';
 
 function App() {
   return (
@@ -20,6 +23,11 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
 
         <Route path="/bookride" element={<BookRide />} />
+
+       {/* Rider routings */}
+        <Route path="/rider" element={<Riderhome/>} />
+        <Route path="/rider/viewvehicle" element={<Viewvehicles/>} />
+        <Route path="/rider/addvehicle" element={<Addvehicle/>} />
       </Routes>
   
   );

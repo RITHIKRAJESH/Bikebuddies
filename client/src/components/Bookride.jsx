@@ -1,147 +1,339 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Box, Button, TextField, Typography, Container } from '@mui/material';
-import { useLoadScript, GoogleMap, DirectionsRenderer, Marker } from '@react-google-maps/api';
-import Geocode from "react-geocode";
+// import React, { useEffect, useState, useRef } from "react";
 
-// Google Maps API key
-const googleMapsAPIKey = '';
+// const BookRide = () => {
+//   const [startAddress, setStartAddress] = useState("");
+//   const [endAddress, setEndAddress] = useState("");
+//   const [distance, setDistance] = useState("");
+//   const mapRef = useRef(null);
+//   const apiKey = ""; // Replace with your HERE Maps API key
 
-// Define the libraries outside the component to avoid unnecessary re-renders
-const libraries = ['places', 'directions'];
+//   useEffect(() => {
+//     const loadScripts = async () => {
+//       try {
+//         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-core.js");
+//         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-service.js");
+//         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-ui.js");
+//         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-mapevents.js");
 
-// Bike Taxi Booking Component
+//         if (window.H) {
+//           initializeMap();
+//         }
+//       } catch (error) {
+//         console.error("Error loading HERE Maps scripts:", error);
+//       }
+//     };
+
+//     loadScripts();
+//   }, []);
+
+//   const loadScript = (url) => {
+//     return new Promise((resolve, reject) => {
+//       const script = document.createElement("script");
+//       script.src = url;
+//       script.async = true;
+//       script.onload = resolve;
+//       script.onerror = reject;
+//       document.body.appendChild(script);
+//     });
+//   };
+
+//   const initializeMap = () => {
+//     if (!window.H) {
+//       console.error("HERE Maps SDK not loaded.");
+//       return;
+//     }
+
+//     const platform = new window.H.service.Platform({ apikey: apiKey });
+//     const defaultLayers = platform.createDefaultLayers();
+
+//     const map = new window.H.Map(
+//       mapRef.current,
+//       defaultLayers.vector.normal.map,
+//       {
+//         center: { lat: 10.1632, lng: 76.6413 }, // Default center: kerala, India
+//         zoom: 9,
+//       }
+//     );
+
+//     // const behavior = new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
+//     new window.H.ui.UI.createDefault(map, defaultLayers);
+    
+//     window.addEventListener("resize", () => map.getViewPort().resize());
+//   };
+//   // const getDistance = async () => {
+//   //   if (!startAddress || !endAddress) {
+//   //     alert("Please enter both latitude and longitude for both locations.");
+//   //     return;
+//   //   }
+  
+//   //   // Sanitize input to ensure correct format (lat,lng) and remove unwanted symbols
+//   //   const sanitizeInput = (input) => {
+//   //     return input.replace(/[^\d.,-]/g, '').trim(); // Removes any non-numeric, non-comma, and non-dash characters
+//   //   };
+  
+//   //   const formattedStart = sanitizeInput(startAddress);
+//   //   const formattedEnd = sanitizeInput(endAddress);
+  
+//   //   const url = `https://router.hereapi.com/v8/routes?transportMode=car&origin=${formattedStart}&destination=${formattedEnd}&return=summary&apiKey=${apiKey}`;
+  
+//   //   try {
+//   //     const response = await fetch(url);
+//   //     if (!response.ok) {
+//   //       throw new Error(`HTTP error! Status: ${response.status}`);
+//   //     }
+  
+//   //     const data = await response.json();
+//   //     if (data.routes && data.routes.length > 0) {
+//   //       const distanceInKm = (data.routes[0].sections[0].summary.length / 1000).toFixed(2);
+//   //       setDistance(`${distanceInKm} km`);
+//   //     } else {
+//   //       setDistance("Distance not found.");
+//   //     }
+//   //   } catch (error) {
+//   //     console.error("Error fetching distance:", error);
+//   //     setDistance("Error retrieving distance.");
+//   //   }
+//   // };
+    
+//   const getDistance = async () => {
+//     if (!startAddress || !endAddress) {
+//       alert("Please enter both start and end locations.");
+//       return;
+//     }
+  
+//     // Geocode the start and end locations to get coordinates
+//     const geocode = async (address) => {
+//       const url = `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=${apiKey}`;
+//       const response = await fetch(url);
+//       const data = await response.json();
+//       if (data.items && data.items.length > 0) {
+//         return data.items[0].position; // returns {lat, lng}
+//       } else {
+//         throw new Error("Address not found.");
+//       }
+//     };
+  
+//     try {
+//       // Geocode the start and end addresses
+//       const startCoords = await geocode(startAddress);
+//       const endCoords = await geocode(endAddress);
+  
+//       // Use the geocoded coordinates to calculate the route
+//       const routeUrl = `https://router.hereapi.com/v8/routes?transportMode=car&origin=${startCoords.lat},${startCoords.lng}&destination=${endCoords.lat},${endCoords.lng}&return=summary&apiKey=${apiKey}`;
+//       const routeResponse = await fetch(routeUrl);
+//       const routeData = await routeResponse.json();
+  
+//       if (routeData.routes && routeData.routes.length > 0) {
+//         const distanceInKm = (routeData.routes[0].sections[0].summary.length / 1000).toFixed(2);
+//         setDistance(`${distanceInKm} km`);
+//       } else {
+//         setDistance("Distance not found.");
+//       }
+//     } catch (error) {
+//       console.error("Error fetching distance:", error);
+//       setDistance("Error retrieving distance.");
+//     }
+//   };
+  
+//   return (
+//     <div className="p-4">
+//       <h1 className="text-xl font-bold mb-4">Find Distance & View Map</h1>
+//       <div className="mb-4">
+//         <input
+//           type="text"
+//           placeholder="Enter Starting Coordinates (Latitude,Longitude)"
+//           value={startAddress}
+//           onChange={(e) => setStartAddress(e.target.value)}
+//           className="border p-2 rounded w-full mb-2"
+//         />
+//         <input
+//           type="text"
+//           placeholder="Enter Destination Coordinates (Latitude,Longitude)"
+//           value={endAddress}
+//           onChange={(e) => setEndAddress(e.target.value)}
+//           className="border p-2 rounded w-full mb-2"
+//         />
+//         <button
+//           onClick={getDistance}
+//           className="bg-blue-500 text-white px-4 py-2 rounded"
+//         >
+//           Get Distance
+//         </button>
+//       </div>
+//       {distance && <p className="text-lg font-semibold">Distance: {distance}</p>}
+
+//       {/* Map container */}
+//       <div
+//         ref={mapRef}
+//         style={{ width: "100%", height: "400px", borderRadius: "8px", marginTop: "20px", backgroundRepeat:"no-repeat", backgroundSize: "cover" }}
+//       ></div>
+//     </div>
+//   );
+// };
+
+// export default BookRide;
+
+
+
+
+import React, { useEffect, useState, useRef } from "react";
+
 const BookRide = () => {
-  const [destination, setDestination] = useState('');
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [directionsResponse, setDirectionsResponse] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const mapRef = useRef();
-
-  // Load Google Maps API
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: googleMapsAPIKey,
-    libraries: libraries,  // Now using the constant 'libraries'
-  });
-
+  const [startAddress, setStartAddress] = useState("");
+  const [endAddress, setEndAddress] = useState("");
+  const [distance, setDistance] = useState("");
+  const mapRef = useRef(null);
+  const mapInstance = useRef(null);
+  const platformRef = useRef(null);
+  const apiKey = ""; // Replace with your HERE Maps API key
+  
   useEffect(() => {
-    // Get the current location
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCurrentLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        () => {
-          alert("Unable to retrieve your location.");
-        }
-      );
-    }
-  }, []);
-
-  // Geocode destination address to get coordinates
-  const handleDestinationChange = async (e) => {
-    setDestination(e.target.value);
-    if (e.target.value) {
-      setLoading(true);
+    const loadScripts = async () => {
       try {
-        // Get destination coordinates from the address
-        const result = await Geocode.fromAddress(e.target.value);
-        const { lat, lng } = result.results[0].geometry.location;
-        calculateRoute(lat, lng);
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-core.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-service.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-ui.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-mapevents.js");
+
+        if (window.H && !mapInstance.current) {
+          initializeMap();
+        }
       } catch (error) {
-        console.error('Error fetching destination coordinates:', error);
+        console.error("Error loading HERE Maps scripts:", error);
       }
-      setLoading(false);
-    }
-  };
-
-  // Calculate the route from current location to destination
-  const calculateRoute = (destinationLat, destinationLng) => {
-    if (!currentLocation) return;
-
-    const directionsService = new window.google.maps.DirectionsService();
-    const request = {
-      origin: currentLocation,
-      destination: { lat: destinationLat, lng: destinationLng },
-      travelMode: window.google.maps.TravelMode.BICYCLING,
     };
 
-    directionsService.route(request, (result, status) => {
-      if (status === 'OK') {
-        setDirectionsResponse(result);
-      } else {
-        console.error('Error fetching directions:', status);
-      }
+    loadScripts();
+  }, []);
+
+  const loadScript = (url) => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = url;
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
     });
   };
 
-  // Handle booking submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    // Handle booking logic here (e.g., save to database, show confirmation)
-    alert(`Ride booked to ${destination}`);
-    setIsSubmitting(false);
+  const initializeMap = () => {
+    if (!window.H) {
+      console.error("HERE Maps SDK not loaded.");
+      return;
+    }
+
+    platformRef.current = new window.H.service.Platform({ apikey: apiKey });
+    const defaultLayers = platformRef.current.createDefaultLayers();
+
+    const map = new window.H.Map(
+      mapRef.current,
+      defaultLayers.vector.normal.map,
+      {
+        center: { lat: 10.1632, lng: 76.6413 }, // Default center: Kerala, India
+        zoom: 9,
+      }
+    );
+
+    new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
+    window.H.ui.UI.createDefault(map, defaultLayers);
+
+    window.addEventListener("resize", () => map.getViewPort().resize());
+    mapInstance.current = map; // Store map instance
   };
 
-  if (!isLoaded) return <div>Loading...</div>;
+  const getDistanceAndRoute = async () => {
+    if (!startAddress || !endAddress) {
+      alert("Please enter both start and end locations.");
+      return;
+    }
+
+    const geocode = async (address) => {
+      const url = `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(address)}&apiKey=${apiKey}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.items && data.items.length > 0) {
+        return data.items[0].position; // Returns {lat, lng}
+      } else {
+        throw new Error("Address not found.");
+      }
+    };
+
+    try {
+      const startCoords = await geocode(startAddress);
+      const endCoords = await geocode(endAddress);
+
+      const routeUrl = `https://router.hereapi.com/v8/routes?transportMode=car&origin=${startCoords.lat},${startCoords.lng}&destination=${endCoords.lat},${endCoords.lng}&return=summary,polyline&apiKey=${apiKey}`;
+      const routeResponse = await fetch(routeUrl);
+      const routeData = await routeResponse.json();
+
+      if (routeData.routes && routeData.routes.length > 0) {
+        const distanceInKm = (routeData.routes[0].sections[0].summary.length / 1000).toFixed(2);
+        setDistance(`${distanceInKm} km`);
+
+        const polyline = routeData.routes[0].sections[0].polyline;
+        displayRoute(polyline);
+      } else {
+        setDistance("Distance not found.");
+      }
+    } catch (error) {
+      console.error("Error fetching distance and route:", error);
+      setDistance("Error retrieving distance.");
+    }
+  };
+
+  const displayRoute = (encodedPolyline) => {
+    if (!mapInstance.current || !platformRef.current) return;
+
+    const lineString = window.H.geo.LineString.fromFlexiblePolyline(encodedPolyline);
+    const routePolyline = new window.H.map.Polyline(lineString, {
+      style: { strokeColor: "blue", lineWidth: 5 },
+    });
+
+    mapInstance.current.addObject(routePolyline);
+    mapInstance.current.getViewModel().setLookAtData({ bounds: routePolyline.getBoundingBox() });
+  };
 
   return (
-    <Container>
-      <Box sx={{ marginBottom: '2rem' }}>
-        <Typography variant="h4" textAlign="center" mb={3}>
-          Book a Bike Taxi Ride
-        </Typography>
+    <div className="p-4">
+      <h1 className="text-xl font-bold mb-4">Find Distance & View Map</h1>
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Enter Starting Location"
+          value={startAddress}
+          onChange={(e) => setStartAddress(e.target.value)}
+          className="border p-2 rounded w-full mb-2"
+        />
+        <input
+          type="text"
+          placeholder="Enter Destination Location"
+          value={endAddress}
+          onChange={(e) => setEndAddress(e.target.value)}
+          className="border p-2 rounded w-full mb-2"
+        />
+        <button
+          onClick={getDistanceAndRoute}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Get Distance & Route
+        </button>
+      </div>
+      {distance && <p className="text-lg font-semibold">Distance: {distance}</p>}
 
-        {/* Booking Form */}
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Enter Destination"
-            variant="outlined"
-            fullWidth
-            value={destination}
-            onChange={handleDestinationChange}
-            required
-          />
-          <Box sx={{ marginTop: '1rem', textAlign: 'center' }}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting || !destination}
-            >
-              {isSubmitting ? 'Booking...' : 'Book Ride'}
-            </Button>
-          </Box>
-        </form>
-
-        {/* Loading Message */}
-        {loading && <Typography textAlign="center" mt={2}>Fetching directions...</Typography>}
-
-        {/* Map and Directions */}
-        {directionsResponse && currentLocation && (
-          <Box sx={{ marginTop: '2rem' }}>
-            <GoogleMap
-              mapContainerStyle={{
-                height: '400px',
-                width: '100%',
-              }}
-              center={currentLocation}
-              zoom={12}
-              onLoad={(map) => mapRef.current = map}
-            >
-              <Marker position={currentLocation} />
-              <Marker position={{ lat: directionsResponse.routes[0].legs[0].end_location.lat(), lng: directionsResponse.routes[0].legs[0].end_location.lng() }} />
-              <DirectionsRenderer directions={directionsResponse} />
-            </GoogleMap>
-          </Box>
-        )}
-      </Box>
-    </Container>
+      {/* Map container */}
+      <div
+        ref={mapRef}
+        style={{
+          width: "100%",
+          height: "400px",
+          borderRadius: "8px",
+          marginTop: "20px",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+        }}
+      ></div>
+    </div>
   );
 };
 

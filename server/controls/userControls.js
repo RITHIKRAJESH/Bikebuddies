@@ -1,13 +1,14 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const userModel = require('../models/userModel');
+const riderModel = require('../models/bookride');
 
 // Create a Nodemailer transporter object
 const transporter = nodemailer.createTransport({
     service: 'gmail', // Use the email provider (e.g., Gmail, Outlook, etc.)
     auth: {   
-        user: 'rajeshrithik49@gmail.com', // Replace with your email
-        pass: 'rasj auvd oxsh qsjp'   // Replace with your email password or app-specific password
+        user: "rajeshrithik49@gmail.com", // Replace with your email
+        pass: "rasj auvd oxsh qsjp"  // Replace with your email password or app-specific password
     },
 });
 
@@ -17,7 +18,7 @@ const generateOTP = () => {
 
 const sendOTPEmail = (email, otp) => {
     const mailOptions = {
-        from: 'rajeshrithik49@gmail.com', // Replace with your email
+        from: "rajeshrithik49@gmail.com", // Replace with your email
         to: email,
         subject: 'OTP for User Registration',
         text: `Your OTP for registration is: ${otp}`,
@@ -107,4 +108,38 @@ const loginUser = async (req, res) => {
 }
 
 
-module.exports = { registerUser, verifyOTP,loginUser };
+const bookRide = async (req, res) => {
+    try {
+        const { riderId, driverId, source, destination, fare } = req.body;
+        const rider = await userModel.findById(riderId);
+        const driver = await userModel.findById(driverId);
+
+        if (!rider) {
+            return res.status(404).json({ message: 'Rider not found' });
+        }
+        if (!driver) {
+            return res.status(404).json({ message: 'Driver not found' });
+        }
+
+        const newRide = new riderModel({
+            riderId,
+            driverId,
+            source,
+            destination,
+            fare,
+            status: 'pending'  
+        });
+
+        // Save the ride to the database
+        await newRide.save();
+
+        return res.status(200).json({ message: 'Ride booked successfully', ride: newRide });
+    } catch (error) {
+        console.error('Error booking ride:', error);
+        return res.status(500).json({ message: 'Error booking ride', error });
+    }
+};
+
+
+
+module.exports = { registerUser, verifyOTP,loginUser,bookRide };

@@ -12,6 +12,8 @@ dbConnect()
 const userRouter=require('./router/userRouter');
 app.use('/user',userRouter);
 
+const riderRouter=require('./router/riderRouter');  
+app.use('/rider',riderRouter);
 app.listen(process.env.PORT,()=>{
     console.log(`Server is running on port ${process.env.PORT}`);
 });
