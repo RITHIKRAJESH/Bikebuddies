@@ -1,31 +1,47 @@
-import React, { useState } from 'react';
-import { TextField, Button, Input, FormControl, FormHelperText, Grid, Card, CardContent, Typography, Box } from '@mui/material';
-import AXIOS from 'axios';
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  FormControl,
+  FormHelperText,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+} from "@mui/material";
+import AXIOS from "axios";
 
 export default function Addvehicle() {
-  const [vehicleName, setVehicleName] = useState('');
-  const [model, setModel] = useState('');
-  const [regNo, setRegNo] = useState('');
-  const [rcBookImage, setRcBookImage] = useState(null);
-  const [insuranceImage, setInsuranceImage] = useState(null);
-  const [licenseImage, setLicenseImage] = useState(null);
-  const [vehicleImage, setVehicleImage] = useState(null);  
-  const [place, setPlace] = useState('');
-  const userId="679cb475d138d509e1edd125"
+  const [vehicleName, setVehicleName] = useState("");
+  const [model, setModel] = useState("");
+  const [regNo, setRegNo] = useState("");
+  const [rcBookImage, setRcBookImage] = useState([]);
+  const [insuranceImage, setInsuranceImage] = useState([]);
+  const [licenseImage, setLicenseImage] = useState([]);
+  const [vehicleImage, setVehicleImage] = useState([]);
+  const [place, setPlace] = useState("");
+
+  const userId =localStorage.getItem("id");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Create a FormData object to send the images
+
     const formData = new FormData();
-    formData.append('vehicleName', vehicleName);
-    formData.append('model', model);
-    formData.append('regNo', regNo);
-    formData.append('place', place);
-    formData.append('rcBookImage', rcBookImage);
-    formData.append('insuranceImage', insuranceImage);
-    formData.append('licenseImage', licenseImage);
-    formData.append('vehicleImage', vehicleImage);
-    AXIOS.post("http://localhost:9000/rider/addvehicle", formData,{headers: {id: userId}})
+    formData.append("vehicleName", vehicleName);
+    formData.append("model", model);
+    formData.append("regNo", regNo);
+    formData.append("place", place);
+
+    // Append multiple images correctly
+    rcBookImage.forEach((file) => formData.append("rcBookImage", file));
+    insuranceImage.forEach((file) => formData.append("insuranceImage", file));
+    licenseImage.forEach((file) => formData.append("licenseImage", file));
+    vehicleImage.forEach((file) => formData.append("vehicleImage", file));
+
+    AXIOS.post("http://localhost:9000/rider/addvehicle", formData, {
+      headers: { id: userId, "Content-Type": "multipart/form-data" },
+    })
       .then((res) => {
         alert(res.data);
       })
@@ -34,25 +50,14 @@ export default function Addvehicle() {
       });
   };
 
-  const handleRcBookChange = (e) => {
-    setRcBookImage(e.target.files[0]);
-  };
-
-  const handleInsuranceChange = (e) => {
-    setInsuranceImage(e.target.files[0]);
-  };
-
-  const handleLicenseChange = (e) => {
-    setLicenseImage(e.target.files[0]);
-  };
-
-  const handleVehicleImageChange = (e) => {  // New function for handling vehicle image upload
-    setVehicleImage(e.target.files[0]);
+  // Handler for multiple file uploads
+  const handleFileChange = (event, setter) => {
+    setter(Array.from(event.target.files)); // Convert FileList to Array
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 5 }}>
-      <Card sx={{ width: '100%', maxWidth: 600 }}>
+    <Box sx={{ display: "flex", justifyContent: "center", marginTop: 5 }}>
+      <Card sx={{ width: "100%", maxWidth: 600 }}>
         <CardContent>
           <Typography variant="h5" component="h2" gutterBottom align="center">
             Vehicle Registration Form
@@ -103,49 +108,52 @@ export default function Addvehicle() {
                 />
               </Grid>
 
+              {/* Multiple File Uploads */}
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth required>
-                  <Input
+                  <input
                     type="file"
                     accept="image/*"
-                    onChange={handleRcBookChange}
+                    multiple
+                    onChange={(e) => handleFileChange(e, setRcBookImage)}
                   />
-                  <FormHelperText>Upload RC Book Image</FormHelperText>
+                  <FormHelperText>Upload RC Book Images</FormHelperText>
                 </FormControl>
               </Grid>
 
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth required>
-                  <Input
+                  <input
                     type="file"
                     accept="image/*"
-                    onChange={handleInsuranceChange}
+                    multiple
+                    onChange={(e) => handleFileChange(e, setInsuranceImage)}
                   />
-                  <FormHelperText>Upload Insurance Image</FormHelperText>
+                  <FormHelperText>Upload Insurance Images</FormHelperText>
                 </FormControl>
               </Grid>
 
-              {/* License Image Upload Field */}
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth required>
-                  <Input
+                  <input
                     type="file"
                     accept="image/*"
-                    onChange={handleLicenseChange}
+                    multiple
+                    onChange={(e) => handleFileChange(e, setLicenseImage)}
                   />
-                  <FormHelperText>Upload Rider License Image</FormHelperText>
+                  <FormHelperText>Upload License Images</FormHelperText>
                 </FormControl>
               </Grid>
 
-              {/* Vehicle Image Upload Field */}
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth required>
-                  <Input
+                  <input
                     type="file"
                     accept="image/*"
-                    onChange={handleVehicleImageChange}  // Handling the vehicle image
+                    multiple
+                    onChange={(e) => handleFileChange(e, setVehicleImage)}
                   />
-                  <FormHelperText>Upload Vehicle Image</FormHelperText>
+                  <FormHelperText>Upload Vehicle Images</FormHelperText>
                 </FormControl>
               </Grid>
 

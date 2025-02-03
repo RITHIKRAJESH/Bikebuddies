@@ -176,8 +176,8 @@
 
 
 
-import React, { useEffect, useState, useRef } from "react";
-
+import { useEffect, useState, useRef } from "react";
+import "./BookRide.css";
 const BookRide = () => {
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
@@ -185,7 +185,7 @@ const BookRide = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const platformRef = useRef(null);
-  const apiKey = ""; // Replace with your HERE Maps API key
+  const apiKey = ""; 
   
   useEffect(() => {
     const loadScripts = async () => {
@@ -294,8 +294,10 @@ const BookRide = () => {
     mapInstance.current.getViewModel().setLookAtData({ bounds: routePolyline.getBoundingBox() });
   };
 
+  const totalprice= distance*15
   return (
-    <div className="p-4">
+    <div className="body">
+    <div className="p-5">
       <h1 className="text-xl font-bold mb-4">Find Distance & View Map</h1>
       <div className="mb-4">
         <input
@@ -318,9 +320,10 @@ const BookRide = () => {
         >
           Get Distance & Route
         </button>
+        
       </div>
       {distance && <p className="text-lg font-semibold">Distance: {distance}</p>}
-
+      <p className="text-lg font-semibold">Total Price: {totalprice}</p>
       {/* Map container */}
       <div
         ref={mapRef}
@@ -333,6 +336,7 @@ const BookRide = () => {
           backgroundSize: "cover",
         }}
       ></div>
+    </div>
     </div>
   );
 };

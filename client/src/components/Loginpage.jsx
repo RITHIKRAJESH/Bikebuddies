@@ -3,6 +3,7 @@ import { Container, TextField, Button, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 // Styled form container
 const FormContainer = styled(motion.div)({
@@ -13,29 +14,30 @@ const FormContainer = styled(motion.div)({
     borderRadius: '15px',
     boxShadow: '0 8px 20px rgba(0,0,0,0.2)', 
 });
-
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const navigate=useNavigate()
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
         const payload = { email, password };
         const url = 'http://localhost:9000/user/login';
-
-        try {
-            const res = await axios.post(url, payload);
-            alert(res.data.message);
-            localStorage.setItem("email", email);
-            setEmail('');
-            setPassword('');
-        } catch (error) {
-            setError(error.response?.data?.message || 'Something went wrong!');
-        }
-    };
-
+            await axios.post(url, payload)
+            .then((res) => {
+                console.log(res.data);
+                const response=res.data;
+                localStorage.setItem("id",response.user._id);
+                alert(res.data.message);
+                navigate('/rider');
+            }
+            )
+        .catch((error)=>{
+            setError('Something went wrong!');
+            console.log(error);
+        })
+    }
     return (
         <Container>
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">

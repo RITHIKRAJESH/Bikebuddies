@@ -1,4 +1,5 @@
 const userModel=require('../models/userModel');
+const vehicleModel=require('../models/bikemodel')
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
@@ -12,20 +13,25 @@ const viewUsers=async(req,res)=>{
 }
 
 
-const viewRiders=async(req,res)=>{
-    try{
-        const riders=await userModel.find({role:'rider'});
-        res.status(200).json(riders);   
-    }catch(error){   
-        res.status(404).json(error.message);
+const viewRiders = async (req, res) => {
+    try {
+        console.log("view")
+        const riders = await vehicleModel.find({}).populate("userId"); 
+        res.status(200).json(riders);
+        console.log(riders)
+        res.end()
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-}
+};
+
 
 
 const verifyRider=async(req,res)=>{
     const id=req.params.id;
+    console.log(id)
     try{
-        await userModel.findByIdAndUpdate(id,{verified:true});
+        await userModel.findByIdAndUpdate(id,{verifieddriver:true});
         res.status(200).json('Rider verified successfully');    
     }catch(error){
         res.status(404).json(error.message);
@@ -42,3 +48,5 @@ const deleteUser=async(req,res)=>{
     }
 }
 
+
+module.exports={viewUsers,viewRiders,verifyRider,deleteUser};

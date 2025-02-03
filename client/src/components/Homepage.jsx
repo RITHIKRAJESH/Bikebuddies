@@ -1,24 +1,92 @@
-import React from 'react';
-import { AppBar, Toolbar, Button, Container, Box, Typography, Grid, Avatar, TextField } from '@mui/material';
+// import React from 'react';
+// import { AppBar, Toolbar, Button, Container, Box, Typography, Grid, Avatar, TextField } from '@mui/material';
+// import { motion } from 'framer-motion';
+// import Slider from 'react-slick';
+// import { gsap } from 'gsap';
+// import { useEffect } from 'react';
+
+// const navbarStyles = {
+//   backgroundColor: '#333',
+//   boxShadow: 'none',
+// };
+
+// import person1 from '../images/person_1.jpg';
+// import person2 from '../images/person_2.jpg';
+// import person3 from '../images/person_3.jpg';
+// import slider1 from '../images/slide1.webp';
+// import slider2 from '../images/slider2.jpg';
+
+
+// const buttonStyles = {
+//   marginLeft: '20px',
+//   backgroundColor: '#ff7043',
+//   color: 'white',
+//   '&:hover': {
+//     backgroundColor: '#f4511e',
+//   },
+// };
+
+// const HomePage = () => {
+
+
+//   const sliderSettings = {
+//     dots: true,
+//     infinite: true,
+//     speed: 500,
+//     slidesToShow: 1,
+//     slidesToScroll: 1,
+//   };
+
+//   return (
+//     <div>
+//       <AppBar position="sticky" sx={navbarStyles}>
+//         <Toolbar>
+//           <Typography variant="h6">Bike Taxi Service</Typography>
+//           <Box ml="auto">
+//             <Button sx={buttonStyles} href="#about">About</Button>
+//             <Button sx={buttonStyles} href="#testimonials">Testimonials</Button>
+//             <Button sx={buttonStyles} href="#contact">Contact</Button>
+//             <Button sx={buttonStyles} href="/login">Login</Button>
+//           </Box>
+//         </Toolbar>
+//       </AppBar>
+
+//       <motion.div className="header-text">
+//         <Slider {...sliderSettings}>
+//           <div>
+//             <img src={slider1} alt="slider 1" style={{ width: '100%', height: '80vh', objectFit: 'fill' }} />
+//           </div>
+//           <div>
+//             <img src={slider2} alt="slider 2" style={{ width: '100%', height: '80vh', objectFit: 'fill' }} />
+//           </div>
+//         </Slider>
+//       </motion.div>
+
+//     </div>
+//   );
+// };
+
+// export default HomePage;
+
+
+import React, { useState, useEffect } from 'react';
+import { AppBar, Toolbar, Button, Container, Box, Typography, Grid, Avatar, TextField, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useMediaQuery } from '@mui/material';
 import { motion } from 'framer-motion';
 import Slider from 'react-slick';
 import { gsap } from 'gsap';
-import { useEffect } from 'react';
+import person1 from '../images/person_1.jpg';
+import person2 from '../images/person_2.jpg';
+import slider1 from '../images/slide1.webp';
+import slider2 from '../images/slider2.jpg';
 
 const navbarStyles = {
   backgroundColor: '#333',
   boxShadow: 'none',
 };
 
-import person1 from '../images/person_1.jpg';
-import person2 from '../images/person_2.jpg';
-import person3 from '../images/person_3.jpg';
-import slider1 from '../images/slide1.webp';
-import slider2 from '../images/slider2.jpg';
-
-
 const buttonStyles = {
-  marginLeft: '20px',
   backgroundColor: '#ff7043',
   color: 'white',
   '&:hover': {
@@ -27,14 +95,23 @@ const buttonStyles = {
 };
 
 const HomePage = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width:600px)');
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   useEffect(() => {
     gsap.fromTo(".header-text", 
-      { opacity: 0, y: -50 },
-      { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" }
+      { opacity: 0, y: -100 }, 
+      { opacity: 1, y: 0, duration: 1.5, ease: "bounce.out" }
     );
+    
+
     gsap.fromTo(".about-text", 
-      { opacity: 0, x: -100 }, 
-      { opacity: 1, x: 0, duration: 1.5, ease: "power2.out", delay: 1 }
+      { opacity: 0, y: 30 }, 
+      { opacity: 1, y: 0, duration: 1.5, ease: "power2.out", stagger: 0.1 }
     );
     gsap.fromTo(".testimonial-box", 
       { opacity: 0, y: 50 }, 
@@ -55,27 +132,50 @@ const HomePage = () => {
       <AppBar position="sticky" sx={navbarStyles}>
         <Toolbar>
           <Typography variant="h6">Bike Taxi Service</Typography>
-          <Box ml="auto">
-            <Button sx={buttonStyles} href="#about">About</Button>
-            <Button sx={buttonStyles} href="#testimonials">Testimonials</Button>
-            <Button sx={buttonStyles} href="#contact">Contact</Button>
-            <Button sx={buttonStyles} href="/login">Login</Button>
-          </Box>
+          {isMobile ? (
+            <IconButton color="inherit" edge="end" onClick={handleDrawerToggle} sx={{ ml: 'auto' }}>
+              <MenuIcon />
+            </IconButton>
+          ) : (
+            <Box ml="auto">
+              <Button sx={buttonStyles} href="#about">About</Button>
+              <Button sx={buttonStyles} href="#testimonials">Testimonials</Button>
+              <Button sx={buttonStyles} href="#contact">Contact</Button>
+              <Button sx={buttonStyles} href="/login">Login</Button>
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
+
+      <Drawer anchor="right" open={mobileOpen} onClose={handleDrawerToggle}>
+        <List>
+          <ListItem button component="a" href="#about" onClick={handleDrawerToggle}>
+            <ListItemText primary="About" />
+          </ListItem>
+          <ListItem button component="a" href="#testimonials" onClick={handleDrawerToggle}>
+            <ListItemText primary="Testimonials" />
+          </ListItem>
+          <ListItem button component="a" href="#contact" onClick={handleDrawerToggle}>
+            <ListItemText primary="Contact" />
+          </ListItem>
+          <ListItem button component="a" href="/login" onClick={handleDrawerToggle}>
+            <ListItemText primary="Login" />
+          </ListItem>
+        </List>
+      </Drawer>
 
       <motion.div className="header-text">
         <Slider {...sliderSettings}>
           <div>
-            <img src={slider1} alt="slider 1" style={{ width: '100%', height: '80vh', objectFit: 'fill' }} />
+            <img src={slider1} alt="slider 1" style={{ width: '100%', height: '80vh', objectFit: 'cover' }} />
           </div>
           <div>
             <img src={slider2} alt="slider 2" style={{ width: '100%', height: '80vh', objectFit: 'fill' }} />
           </div>
         </Slider>
       </motion.div>
-
-      <Container id="about" sx={{ py: 8 }}>
+      
+      <Container id="about" sx={{ py: 8 }} className="about-text">
         <Typography variant="h4" textAlign="center" mb={3}>About Us</Typography>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>

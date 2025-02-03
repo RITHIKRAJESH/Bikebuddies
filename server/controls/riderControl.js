@@ -28,6 +28,17 @@ const addVehicle = async (req, res) => {
 }
 
 
+const viewVehicle = async (req, res) => {
+    const userId = req.headers._id
+    console.log(userId)
+    try {
+        const vehicle = await vehicleModel.findOne({ userId });
+        console.log(vehicle);
+        res.status(200).json([vehicle]);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
 
 
-module.exports = { addVehicle };
+module.exports = { addVehicle,viewVehicle};

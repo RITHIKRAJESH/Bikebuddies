@@ -101,7 +101,7 @@ const loginUser = async (req, res) => {
         const existingUser = await userModel.findOne({ email });
         if (!existingUser) return res.status(404).json("User doesn't exist" );
         if (password !== existingUser.password) return res.status(400).json("Invalid credentials" );
-        res.status(200).json({ existingUser });
+        res.status(200).json({ user:existingUser });
     } catch (error) {
         res.status(500).json(error.message );
     }
