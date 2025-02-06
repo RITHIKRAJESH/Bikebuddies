@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const userModel = require('../models/userModel');
 const riderModel = require('../models/bookride');
-
+const vehicleModel=require('../models/bikemodel')
 // Create a Nodemailer transporter object
 const transporter = nodemailer.createTransport({
     service: 'gmail', // Use the email provider (e.g., Gmail, Outlook, etc.)
@@ -140,6 +140,14 @@ const bookRide = async (req, res) => {
     }
 };
 
+const viewVehicle=async(req,res)=>{
+    try{
+       const details=await vehicleModel.find().populate("userId")
+       console.log(details)
+       res.json(details)
+    }catch(err){
+        console.log(err)
+    }
+}
 
-
-module.exports = { registerUser, verifyOTP,loginUser,bookRide };
+module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle };

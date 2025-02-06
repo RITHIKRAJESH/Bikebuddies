@@ -7,7 +7,7 @@
   margin: 0;
 }
 
-.p-5 {
+.p-8 {
   background-color: #1e1e1e;
   padding: 20px;
   border-radius: 10px;
@@ -58,6 +58,13 @@ button:hover {
   height: 400px;
   border-radius: 8px;
   margin-top: 20px;
-  background-color: #333;
+  /* background-color: #333; */
   border: 2px solid #ff6600;
+}
+.p-3{
+  background-color: white;
+}
+
+.mt-6{
+  color:#ff6600;
 }
