@@ -11,6 +11,7 @@ import Addvehicle from './components/rider/addvehicle';
 import Viewusers from './components/admin/viewusers';
 import Viewreviews from './components/admin/viewreviews';
 import Verifyrider from './components/admin/verifyrider';
+import RideHistory from './components/user/rideHistory';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
   {/* User Router */}
         <Route path="/user/bookride" element={<BookRide />} />
+        <Route path="/user/history" element={<RideHistory />} />
 
        {/* Rider routings */}
         <Route path="/rider" element={<Riderhome/>} />

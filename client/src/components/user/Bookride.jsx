@@ -351,16 +351,19 @@
 
 import { useEffect, useState, useRef } from "react";
 import "./BookRide.css";
+import UserNav from "./usernav";
+import axios from "axios";
 
 const BookRide = () => {
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
   const [distance, setDistance] = useState("");
-  const [riders, setRiders] = useState([]); // State to store riders
+  const [riders, setRiders] = useState([]); 
+  const [selectedRider, setSelectedRider] = useState(null);// State to store riders
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const platformRef = useRef(null);
-  const apiKey = "eSOtS524rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc"; // Add your HERE Maps API key
+  const apiKey = "24rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc"; // Add your HERE Maps API key
 
   useEffect(() => {
     const loadScripts = async () => {
@@ -481,9 +484,37 @@ const BookRide = () => {
     mapInstance.current.getViewModel().setLookAtData({ bounds: routePolyline.getBoundingBox() });
   };
 
-  const totalPrice = parseFloat(distance) * 12 || 0;
+  const totalPrice = parseFloat(distance) * 8 || 0;
+  const handleRiderSelection = (rider) => {
+    setSelectedRider(rider);
+    
+  };
+ 
 
-  return (
+  
+  const handleBooking = () => {
+    console.log(selectedRider)
+    if (!selectedRider) {
+      alert("Please select a rider before booking.");
+    
+      return;
+    }
+    const bookingDetails = {
+      vehicleId: selectedRider._id,
+      userId: localStorage.getItem("id"),
+      startAddress,
+      endAddress,
+      totalCost: totalPrice.toFixed(2),
+      distance,
+    };
+  axios.post("http://localhost:9000/user/bookride",bookingDetails)
+  .then((res)=>alert(res.data))
+  .catch((err)=>console.log(err))
+};
+  
+
+  return (<>
+  <UserNav/>
     <div className="body">
       <div className="p-8">
         <h1 className="text-xl font-bold mb-4">Find Distance & View Map</h1>
@@ -526,15 +557,21 @@ const BookRide = () => {
         ></div>
 
         {/* Riders List */}
-        <h2 className="text-xl font-bold mt-6">Available Riders</h2>
+        <div className="p-8">
+        <h1 className="text-xl font-bold mb-4">Select a Rider</h1>
         <div className="mt-4">
           {riders.length > 0 ? (
             <ul className="list-disc pl-5">
               {riders.map((rider, index) => (
-                <li key={index} className="mb-2 border p-3 mt-6 rounded shadow">
+                <li
+                  key={index}
+                  className={`mb-2 border p-3 mt-2 rounded shadow cursor-pointer ${
+                    selectedRider === rider ? "bg-blue-300" : ""
+                  }`}
+                  onClick={() => handleRiderSelection(rider)}
+                >
                   <p><strong>Name:</strong> {rider.vehicleName}</p>
                   <p><strong>Bike Model:</strong> {rider.model}</p>
-                  {/* <p><strong>Phone:</strong> {rider.phone}</p> */}
                 </li>
               ))}
             </ul>
@@ -542,8 +579,15 @@ const BookRide = () => {
             <p>No riders available.</p>
           )}
         </div>
+        <button
+          onClick={handleBooking}
+          className="bg-green-500 text-white px-4 py-2 rounded mt-4"
+        >
+          Book Ride
+        </button>
       </div>
-    </div>
+      </div>
+    </div></>
   );
 };
 

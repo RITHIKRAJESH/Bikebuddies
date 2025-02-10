@@ -29,8 +29,15 @@ const LoginPage = () => {
                 console.log(res.data);
                 const response=res.data;
                 localStorage.setItem("id",response.user._id);
-                alert(res.data.message);
-                navigate('/rider');
+                if(response.user.role=="ride"){
+                    alert("Login Successfull welcome rider")
+                    navigate("/rider")
+                }
+                else{
+                    alert("Login Successfull welcome user")
+                    navigate("/user/bookride")
+                }
+               
             }
             )
         .catch((error)=>{

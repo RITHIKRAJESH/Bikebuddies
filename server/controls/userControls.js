@@ -150,4 +150,17 @@ const viewVehicle=async(req,res)=>{
     }
 }
 
-module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle };
+const booking=async(req,res)=>{
+    try{
+        const {vehicleId, userId, startAddress, endAddress,totalCost,distance}=req.body
+        const ride=new riderModel({
+            vehicleId,userId,startAddress,endAddress,fare:totalCost,totalDistance:distance,status:"Booked"
+        })
+        await ride.save()
+        res.json("Confirmed Booking")
+    }catch(err){
+        console.log(err)
+    }
+}
+
+module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking};

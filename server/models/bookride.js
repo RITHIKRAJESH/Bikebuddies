@@ -1,25 +1,29 @@
 const mongoose=require('mongoose');
 const rideSchema=new mongoose.Schema({
-    riderId:{
+    userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'user',
         required:true
     },
-    driverId:{
+    vehicleId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'user',
+        ref:'vehicle',
         required:true
     },
-    source:{
+    startAddress:{
         type:String,
         required:true
     },
-    destination:{
+    endAddress:{
         type:String,
         required:true
     },
     fare:{
         type:Number,
+        required:true
+    },
+    totalDistance:{
+        type:String,
         required:true
     },
     status:{
