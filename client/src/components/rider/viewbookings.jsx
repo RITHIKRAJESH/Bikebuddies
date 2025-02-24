@@ -250,7 +250,7 @@ import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "./navbar";
 
-const apiKey = "eSOtS524rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc"; // Replace with your API Key
+const apiKey = "24rC0uHYXXQVgjxQzdrVaXyK-Zf9"; // Replace with your API Key
 
 export default function RiderViewBookings() {
   const [booking, setBooking] = useState([]);
