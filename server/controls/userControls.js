@@ -163,4 +163,14 @@ const booking=async(req,res)=>{
     }
 }
 
-module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking};
+const Mybooking=async(req,res)=>{
+    try{
+        const userid=req.headers._id
+        const bookings=await riderModel.find({userId:userid}).populate("vehicleId")
+        res.json(bookings)
+    }catch(err){
+        console.log(err)
+    }
+}
+
+module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking, Mybooking};

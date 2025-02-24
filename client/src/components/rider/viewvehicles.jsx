@@ -54,7 +54,7 @@ export default function ViewVehicles() {
 
         {vehicles.length === 0 ? (
           <Typography variant="h6" align="center" color="textSecondary">
-            No vehicles found.
+            No vehicles available.
           </Typography>
         ) : (
           <Grid container spacing={3}>
@@ -142,29 +142,29 @@ export default function ViewVehicles() {
       </Container>
 
       {/* Floating Add Button */}
-      <button style={styles.floatingButton}>+</button>
-     
+      <button style={styles.floatingButton} onClick={handleAddClick}>
+        +
+      </button>
     </>
   );
 }
 
-const styles={
+const styles = {
   floatingButton: {
-    position: 'fixed',
-    bottom: '20px',
-    right: '20px',
-    backgroundColor: 'orange',
-    color: 'white',
-    border: 'none',
-    borderRadius: '50%',
-    width: '60px',
-    height: '60px',
-    fontSize: '30px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    cursor: 'pointer',
-    boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-  }
-  
-          }  
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    backgroundColor: "#ff6600",
+    color: "white",
+    border: "none",
+    borderRadius: "50%",
+    width: "60px",
+    height: "60px",
+    fontSize: "30px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    cursor: "pointer",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+  },
+};

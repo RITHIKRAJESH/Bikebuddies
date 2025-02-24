@@ -23,12 +23,12 @@ export default function Riderhome() {
           </div>
         </div>
 
-        <div style={styles.quickActions}>
+        {/* <div style={styles.quickActions}>
           <button style={styles.quickActionButton}>View My Vehicles</button>
           <button style={styles.quickActionButton}>Start a Ride</button>
           <button style={styles.quickActionButton}>View Earnings</button>
           <button style={styles.quickActionButton}>Settings</button>
-        </div>
+        </div> */}
 
         <div style={styles.news}>
           <h2>Latest Updates</h2>
@@ -77,7 +77,7 @@ const styles = {
     marginTop: '30px',
   },
   quickActionButton: {
-    backgroundColor: 'orange',
+    backgroundColor: '#ff6600',
     color: 'white',
     border: 'none',
     borderRadius: '8px',
@@ -101,7 +101,7 @@ const styles = {
     position: 'fixed',
     bottom: '20px',
     right: '20px',
-    backgroundColor: 'orange',
+    backgroundColor: '#ff6600',
     color: 'white',
     border: 'none',
     borderRadius: '50%',

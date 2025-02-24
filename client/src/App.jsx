@@ -1,45 +1,57 @@
-import {  Route, Routes } from 'react-router-dom';
-import HomePage from './components/Homepage'; // Import HomePage component
-import RegisterPage from './components/registeruser'; // Import RegisterPage component
-import LoginPage from './components/Loginpage'; // Import LoginPage component
+import { Route, Routes } from "react-router-dom";
+import { Suspense, lazy } from "react";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-import BookRide from './components/user/Bookride';
-import Riderhome from './components/rider/Riderhome';
-import Viewvehicles from './components/rider/viewvehicles';
-import Addvehicle from './components/rider/addvehicle';
-import Viewusers from './components/admin/viewusers';
-import Viewreviews from './components/admin/viewreviews';
-import Verifyrider from './components/admin/verifyrider';
-import RideHistory from './components/user/rideHistory';
+import CompletedRides from "./components/rider/completedRids";
+
+// Lazy-loaded components
+const HomePage = lazy(() => import("./components/Homepage"));
+const RegisterPage = lazy(() => import("./components/registeruser"));
+const LoginPage = lazy(() => import("./components/Loginpage"));
+const BookRide = lazy(() => import("./components/user/Bookride"));
+const RideHistory = lazy(() => import("./components/user/rideHistory"));
+const Riderhome = lazy(() => import("./components/rider/Riderhome"));
+const Viewvehicles = lazy(() => import("./components/rider/viewvehicles"));
+const Addvehicle = lazy(() => import("./components/rider/addvehicle"));
+const RiderViewbookings = lazy(() => import("./components/rider/viewbookings"));
+const AdminDashboard = lazy(() => import("./components/admin/admindashboard"));
+const Viewusers = lazy(() => import("./components/admin/viewusers"));
+const Viewreviews = lazy(() => import("./components/admin/viewreviews"));
+const Verifyrider = lazy(() => import("./components/admin/verifyrider"));
+const ViewRides = lazy(() => import("./components/admin/viewRides"));
+
+// Loading fallback component
+const Loading = () => <div style={{ textAlign: "center", marginTop: "20%" }}>Loading...</div>;
 
 function App() {
   return (
-    
+    <Suspense fallback={<Loading />}>
       <Routes>
-        {/* Define the route for the Home Page */}
+        {/* Home Page */}
         <Route path="/" element={<HomePage />} />
         
-        {/* Define the route for the Register Page */}
+        {/* Authentication */}
         <Route path="/register" element={<RegisterPage />} />
-        
-        {/* Define the route for the Login Page */}
         <Route path="/login" element={<LoginPage />} />
-  {/* User Router */}
+
+        {/* User Routes */}
         <Route path="/user/bookride" element={<BookRide />} />
         <Route path="/user/history" element={<RideHistory />} />
 
-       {/* Rider routings */}
-        <Route path="/rider" element={<Riderhome/>} />
-        <Route path="/rider/viewvehicle" element={<Viewvehicles/>} />
-        <Route path="/rider/addvehicle" element={<Addvehicle/>} />
-
-        {/* Admin Router */}
-         <Route path="/admin/viewusers" element={<Viewusers/>} />
-         <Route path="/admin/viewreviews" element={<Viewreviews/>} />
-         <Route path="/admin/verifyrider" element={<Verifyrider/>} />
+        {/* Rider Routes */}
+        <Route path="/rider/*" element={<Riderhome />} />
+        <Route path="/rider/viewvehicle" element={<Viewvehicles />} />
+        <Route path="/rider/addvehicle" element={<Addvehicle />} />
+        <Route path="/rider/viewbooking" element={<RiderViewbookings />} />
+        <Route path="/rider/completedrides" element={<CompletedRides/>}/>
+        {/* Admin Routes */}
+        <Route path="/admin/*" element={<AdminDashboard />} />
+        <Route path="/admin/viewusers" element={<Viewusers />} />
+        <Route path="/admin/viewreviews" element={<Viewreviews />} />
+        <Route path="/admin/verifyrider" element={<Verifyrider />} />
+        <Route path="/admin/bookings" element={<ViewRides />} />
       </Routes>
-  
+    </Suspense>
   );
 }
 

@@ -87,12 +87,22 @@ const navbarStyles = {
 };
 
 const buttonStyles = {
+  marginLeft: '10px', 
   backgroundColor: '#ff7043',
   color: 'white',
   '&:hover': {
     backgroundColor: '#f4511e',
   },
 };
+
+const buttonStyles1 = { 
+  backgroundColor: '#ff7043',
+  color: 'white',
+  '&:hover': {
+    backgroundColor: '#f4511e',
+  },
+};
+
 
 const HomePage = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -222,7 +232,7 @@ const HomePage = () => {
             <TextField fullWidth label="Name" margin="normal" />
             <TextField fullWidth label="Email" margin="normal" />
             <TextField fullWidth label="Message" margin="normal" multiline rows={4} />
-            <Button fullWidth sx={buttonStyles} style={{ marginTop: '10px' }}>Send Enquiry</Button>
+            <Button fullWidth sx={buttonStyles1} style={{ marginTop: '10px' }}>Send Enquiry</Button>
           </Grid>
         </Grid>
       </Container>

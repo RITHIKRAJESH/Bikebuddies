@@ -7,7 +7,7 @@ const rideSchema=new mongoose.Schema({
     },
     vehicleId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'vehicle',
+        ref:'Vehicle',
         required:true
     },
     startAddress:{

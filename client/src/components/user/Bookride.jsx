@@ -350,7 +350,8 @@
 
 
 import { useEffect, useState, useRef } from "react";
-import "./BookRide.css";
+import { FaBicycle } from 'react-icons/fa';
+
 import UserNav from "./usernav";
 import axios from "axios";
 
@@ -363,7 +364,7 @@ const BookRide = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const platformRef = useRef(null);
-  const apiKey = "24rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc"; // Add your HERE Maps API key
+  const apiKey = "eSOtS524rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc"; // Add your HERE Maps API key
 
   useEffect(() => {
     const loadScripts = async () => {
@@ -485,12 +486,15 @@ const BookRide = () => {
   };
 
   const totalPrice = parseFloat(distance) * 8 || 0;
-  const handleRiderSelection = (rider) => {
-    setSelectedRider(rider);
+  // const handleRiderSelection = (rider) => {
+  //   setSelectedRider(rider);
     
-  };
+  // };
  
-
+  const handleRiderSelection = (event) => {
+    const rider = riders.find(r => r.vehicleName === event.target.value);
+    setSelectedRider(rider);
+  };
   
   const handleBooking = () => {
     console.log(selectedRider)
@@ -557,28 +561,43 @@ const BookRide = () => {
         ></div>
 
         {/* Riders List */}
-        <div className="p-8">
-        <h1 className="text-xl font-bold mb-4">Select a Rider</h1>
-        <div className="mt-4">
-          {riders.length > 0 ? (
-            <ul className="list-disc pl-5">
-              {riders.map((rider, index) => (
-                <li
-                  key={index}
-                  className={`mb-2 border p-3 mt-2 rounded shadow cursor-pointer ${
-                    selectedRider === rider ? "bg-blue-300" : ""
-                  }`}
-                  onClick={() => handleRiderSelection(rider)}
-                >
-                  <p><strong>Name:</strong> {rider.vehicleName}</p>
-                  <p><strong>Bike Model:</strong> {rider.model}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No riders available.</p>
+        <div className="p-10">
+      <h1 className="text-xl font-bold mb-4">Select Available Vehicles</h1>
+      
+      {riders.length > 0 ? (
+        <div>
+          {/* Dropdown for selecting a rider */}
+          <select 
+  className="custom-select"
+  onChange={handleRiderSelection}
+  defaultValue=""
+>
+  <option value="" disabled>Select a rider</option>
+  {riders.map((rider, index) => (
+    <option key={index} value={rider.vehicleName}>
+      {rider.vehicleName} ({rider.model})
+    </option>
+  ))}
+</select>
+
+          {/* Show selected rider details */}
+          {selectedRider && (
+            <div className="mt-6 p-6 border rounded-lg shadow-md bg-white" >
+              <div className="flex items-center">
+                <FaBicycle className="text-3xl text-blue-500 mr-3" />
+                <div className="flex flex-col">
+                  <p className="font-semibold">{selectedRider.vehicleName}</p>
+                  <p className="text-sm text-gray-500">{selectedRider.model}</p>
+                </div>
+              </div>
+            </div>
           )}
         </div>
+      ) : (
+        <p>No riders available.</p>
+      )}
+  
+
         <button
           onClick={handleBooking}
           className="bg-green-500 text-white px-4 py-2 rounded mt-4"
@@ -587,7 +606,147 @@ const BookRide = () => {
         </button>
       </div>
       </div>
-    </div></>
+    </div>
+    <style jsx>{`
+    .body {
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 140vh;
+  margin: 0;
+}
+
+.p-8 {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  
+}
+
+h1 {
+  color: #ff6600;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ff6600;
+  border-radius: 5px;
+  background-color: #2a2a2a;
+  color: white;
+  outline: none;
+}
+
+input::placeholder {
+  color: #bbb;
+}
+
+button {
+  background-color: #ff6600;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #e65c00;
+}
+
+.map-container {
+  width: 100%;
+  height: 400px;
+  border-radius: 8px;
+  margin-top: 80px;
+  /* background-color: #333; */
+  border: 2px solid #ff6600;
+}
+.p-3{
+  background-color: white;
+}
+
+.mt-6{
+  color:#ff6600;
+}
+
+
+.navbar {
+  background-color: #ff6600;
+  padding: 16px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  position: fixed;  /* Keeps navbar fixed at the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensures navbar stays on top of other elements */
+}
+
+.navbar ul {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  transition: opacity 0.3s;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+/* Ensure main content does not overlap navbar */
+.main-content {
+  margin-top: 70px; /* Adjust based on navbar height */
+  padding: 20px;
+}
+.custom-select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.custom-select:hover {
+  border-color: #0056b3;
+}
+
+.custom-select option {
+  padding: 10px;
+  font-size: 14px;
+}
+`}
+    </style>
+    </>
   );
 };
 

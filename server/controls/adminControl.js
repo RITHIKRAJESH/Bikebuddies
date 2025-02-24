@@ -1,5 +1,6 @@
 const userModel=require('../models/userModel');
 const vehicleModel=require('../models/bikemodel')
+const riderModel=require('../models/bookride')
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
@@ -49,4 +50,25 @@ const deleteUser=async(req,res)=>{
 }
 
 
-module.exports={viewUsers,viewRiders,verifyRider,deleteUser};
+const countDetails = async (req, res) => {
+    try {
+        const userCount = await userModel.countDocuments({ role: "user" });
+        const riderCount = await userModel.countDocuments({ role: "rider" });
+        const bikeCount = await vehicleModel.countDocuments();
+        const bookCount= await riderModel.countDocuments();
+        res.json({ users: userCount, riders: riderCount, bikes: bikeCount ,bookings : bookCount});
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+};
+
+const viewRides=async(req,res)=>{
+    try{
+        const rides=await riderModel.find().populate("userId")
+        res.json(rides)
+    }catch(err){
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+module.exports={viewUsers,viewRiders,verifyRider,deleteUser,countDetails,viewRides};

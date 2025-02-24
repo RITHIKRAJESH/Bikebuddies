@@ -16,7 +16,7 @@ export default function Navbar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "orange" }}>
+    <AppBar position="static" sx={{ backgroundColor: "#ff6600" }}>
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Bike Buddies
@@ -38,6 +38,9 @@ export default function Navbar() {
           <MenuItem onClick={() => { handleClose(); navigate('/rider/completedrides'); }}>Completed Rides</MenuItem>
         </Menu>
         <Button color="inherit">Rating</Button>
+        <Button color="inherit" onClick={() => {navigate('/')
+          localStorage.clear()
+        }}>Logout</Button>
       </Toolbar>
     </AppBar>
   );

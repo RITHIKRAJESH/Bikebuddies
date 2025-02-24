@@ -29,13 +29,17 @@ const LoginPage = () => {
                 console.log(res.data);
                 const response=res.data;
                 localStorage.setItem("id",response.user._id);
-                if(response.user.role=="ride"){
+                if(response.user.role=="rider"){
                     alert("Login Successfull welcome rider")
                     navigate("/rider")
                 }
-                else{
+                else if(response.user.role=="user"){
                     alert("Login Successfull welcome user")
                     navigate("/user/bookride")
+                }
+                else if(response.user.role=="admin"){
+                    alert("Login Successfull welcome admin")
+                    navigate("/admin")
                 }
                
             }

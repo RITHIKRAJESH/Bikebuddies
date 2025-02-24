@@ -12,8 +12,8 @@ export default function Userhome() {
       <nav className="navbar">
         <ul>
           <li><Link to="/user/bookride">Book Ride</Link></li>
-          <li><Link to="/user/history">History</Link></li>
-          <li><Link to="/user/payment">Payment</Link></li>
+          <li><Link to="/user/history">MyBookings</Link></li>
+          {/* <li><Link to="/user/payment">Payment</Link></li> */}
           <li><Link to="/user/profile">Profile</Link></li>
           <li><Link to="/" onClick={logout}>Logout</Link></li>
         </ul>
