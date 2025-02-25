@@ -46,10 +46,10 @@ function App() {
         <Route path="/rider/completedrides" element={<CompletedRides/>}/>
         {/* Admin Routes */}
         <Route path="/admin/*" element={<AdminDashboard />} />
-        <Route path="/admin/viewusers" element={<Viewusers />} />
+        {/* <Route path="/admin/viewusers" element={<Viewusers />} />
         <Route path="/admin/viewreviews" element={<Viewreviews />} />
         <Route path="/admin/verifyrider" element={<Verifyrider />} />
-        <Route path="/admin/bookings" element={<ViewRides />} />
+        <Route path="/admin/bookings" element={<ViewRides />} /> */}
       </Routes>
     </Suspense>
   );

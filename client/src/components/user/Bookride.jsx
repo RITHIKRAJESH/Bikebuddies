@@ -364,7 +364,7 @@ const BookRide = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const platformRef = useRef(null);
-  const apiKey = "24rC0uHYXXQVgjxQzdrVaXyK-Zf9"; // Add your HERE Maps API key
+  const apiKey = "eSOtS524rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc"; // Add your HERE Maps API key
 
   useEffect(() => {
     const loadScripts = async () => {

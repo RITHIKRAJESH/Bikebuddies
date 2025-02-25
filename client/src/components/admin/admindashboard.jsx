@@ -11,6 +11,7 @@ import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import Axios from "axios";
 import ViewUsers from "./viewusers";
 import VerifyRider from "./verifyrider";
+import ViewRides from "./viewRides";
 // import ViewRides from "./viewRides";
 
 const sidebarWidth = 240;
@@ -121,10 +122,11 @@ const AdminDashboard = () => {
             </Paper>
           </Grid>
         </Grid>
-
+          
         <Routes>
-          <Route path="/admin/viewusers" element={<ViewUsers />} />
-          <Route path="/admin/verifyrider" element={<VerifyRider filter={filter} setFilter={setFilter} />} />
+          <Route path="/viewusers" element={<ViewUsers />} />
+          <Route path="/verifyrider" element={<VerifyRider filter={filter} setFilter={setFilter} />} />
+          <Route path="/bookings" element={<ViewRides />} /> 
         </Routes>
         <Outlet />
       </Box>
