@@ -4,7 +4,10 @@ import axios from "axios";
 
 export default function RideHistory() {
   const [booking, setBooking] = useState([]);
-
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [selectedRideId, setSelectedRideId] = useState(null);
+  const [review, setReview] = useState("");
+  const [rating, setRating] = useState(0);
   useEffect(() => {
     const userid = localStorage.getItem("id");
     axios
@@ -22,22 +25,46 @@ export default function RideHistory() {
     if (status === "Confirmed") {
       alert("Cancelling a confirmed booking may cause issues with your future bookings.");
       axios
-      .put("http://localhost:9000/rider/updateStatus", { status: status,id: rideId })
-      .then((res) => {
-        console.log(res.data)})
-      .catch((err)=>{
-        console.log(err)
-      })
+        .put("http://localhost:9000/rider/updateStatus", { status: status, id: rideId })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       alert("Booking cancelled successfully!");
       axios
-      .put("http://localhost:9000/rider/updateStatus", { status: status,id: rideId })
-      .then((res) => {
-        console.log(res.data)})
-      .catch((err)=>{
-        console.log(err)
-      })
+        .put("http://localhost:9000/rider/updateStatus", { status: status, id: rideId })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
+  };
+
+  const handleOpenReviewModal = (rideId) => {
+    setSelectedRideId(rideId);
+    setShowReviewModal(true);
+  };
+
+  const handleSubmitReview = () => {
+    if (!review || rating === 0) {
+      alert("Please provide both a review and a rating.");
+      return;
+    }
+   console.log(selectedRideId)
+    axios
+      .post("http://localhost:9000/user/addReview", { bookid: selectedRideId, review, rating })
+      .then((res) => {
+        alert(res.data);
+        setShowReviewModal(false);
+        setReview("");
+        setRating(0);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -70,10 +97,9 @@ export default function RideHistory() {
                   </div>
 
                   <div className="mb-3">
-                     <p className="text-md font-semibold text-gray-600">🚗 Distance: <span className="text-gray-800">{ride.totalDistance}</span></p>
-                     <p className="text-md font-semibold text-gray-600">💵 Amount: <span className="text-gray-800">{ride.fare}</span></p>
-                   </div>
-
+                    <p className="text-md font-semibold text-gray-600">🚗 Distance: <span className="text-gray-800">{ride.totalDistance}</span></p>
+                    <p className="text-md font-semibold text-gray-600">💵 Amount: <span className="text-gray-800">{ride.fare}</span></p>
+                  </div>
 
                   <div className="mb-3">
                     <p className="text-sm text-gray-500">📅 Date: <span className="font-medium text-gray-800">{new Date(ride.createdAt).toLocaleDateString()}</span></p>
@@ -89,18 +115,15 @@ export default function RideHistory() {
 
                   {/* Cancel Button */}
                   {ride.status === "Booked" || ride.status === "Confirmed" ? (
-                    <button
-                      onClick={() => handleCancelBooking(ride._id, "Cancelled")}
-                     className="btn45"     >
+                    <button onClick={() => handleCancelBooking(ride._id, "Cancelled")} className="btn45">
                       Cancel Booking
                     </button>
-                  ) : (
-                    <button
-                      disabled
-                      // className="mt-4 px-4 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed"
-                    >
-                      Cancelled
+                  ) : ride.status === "Completed" ? (
+                    <button onClick={() => handleOpenReviewModal(ride._id)} className="btnReview">
+                      Leave a Review
                     </button>
+                  ) : (
+                    <button disabled>Cancelled</button>
                   )}
                 </div>
               </div>
@@ -111,15 +134,47 @@ export default function RideHistory() {
         )}
       </div>
 
-      <style jsx>{`
+      {showReviewModal && (
+        <div className="review-modal-overlay">
+          <div className="review-modal">
+            <h3 className="text-2xl font-semibold text-center mb-4">Leave a Review</h3>
+            <textarea
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
+              placeholder="Write your review here..."
+              rows="4"
+              className="review-textarea"
+            ></textarea>
+            <div className="star-rating text-center mb-4">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  className={star <= rating ? "star filled" : "star"}
+                  onClick={() => setRating(star)}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+            <button onClick={handleSubmitReview} className="submit-review">
+              Submit Review
+            </button>
+            <button onClick={() => setShowReviewModal(false)} className="close-modal">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
-        .btn45{
-        width:50%;
-        border:none;
-        border-radius:10px;
-        padding:5px;
-        background-color:#e82828;
-        margin-top:5px;
+      <style jsx>{`
+        /* Preserve previous styles for cards */
+        .btn45 {
+          width: 50%;
+          border: none;
+          border-radius: 10px;
+          padding: 5px;
+          background-color: #e82828;
+          margin-top: 5px;
         }
 
         .container {
@@ -262,6 +317,97 @@ export default function RideHistory() {
 
         .text-center {
           text-align: center;
+        }
+
+        /* Updated styles for the review modal */
+        .review-modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+        }
+
+        .review-modal {
+          background-color: #fff;
+          padding: 2rem;
+          border-radius: 10px;
+          width: 90%;
+          max-width: 500px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          transform: scale(0.8);
+          animation: modal-open 0.3s ease-in-out forwards;
+        }
+
+        @keyframes modal-open {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        .review-textarea {
+          width: 100%;
+          padding: 1rem;
+          border-radius: 10px;
+          border: 1px solid #ddd;
+          resize: none;
+          font-size: 1rem;
+          margin-bottom: 1rem;
+          box-sizing: border-box;
+        }
+
+        .star-rating .star {
+          font-size: 2rem;
+          color: #d3d3d3;
+          cursor: pointer;
+          transition: color 0.3s ease;
+        }
+
+        .star-rating .star.filled {
+          color: #ffd700;
+        }
+
+        .submit-review {
+          width: 100%;
+          padding: 1rem;
+          background-color: #4caf50;
+          color: white;
+          font-size: 1.1rem;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        .submit-review:hover {
+          background-color: #45a049;
+        }
+
+        .close-modal {
+          width: 100%;
+          padding: 1rem;
+          background-color: #f44336;
+          color: white;
+          font-size: 1.1rem;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
+          margin-top: 10px;
+          transition: background-color 0.3s ease;
+        }
+
+        .close-modal:hover {
+          background-color: #e53935;
         }
       `}</style>
     </>

@@ -71,4 +71,25 @@ const viewRides=async(req,res)=>{
     }
 }
 
-module.exports={viewUsers,viewRiders,verifyRider,deleteUser,countDetails,viewRides};
+
+const viewReviews=async(req,res)=>{
+    try{
+        const reviews=await riderModel.find().populate("userId").populate("vehicleId")
+        res.json(reviews)
+    }catch(err){
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+const update=async(req,res)=>{
+    try{
+        const id=req.headers.id
+        console.log(id)
+        await riderModel.findByIdAndUpdate({_id:id},{reviewstatus:"posted"})
+        res.json("Posted Successfully")
+    }catch(err){
+        res.status(500).json({ message: "Server error", err });
+    }
+}
+
+module.exports={viewUsers,viewRiders,verifyRider,deleteUser,countDetails,viewRides,viewReviews,update};

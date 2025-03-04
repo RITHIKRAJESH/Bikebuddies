@@ -29,6 +29,15 @@ const rideSchema=new mongoose.Schema({
     status:{
         type:String,
         default:'pending'
+    },
+    review:{
+        type:String,
+    },
+    rating:{
+        type:String
+    },
+    reviewstatus:{
+        type:String
     }
 },{timestamps:true});
 

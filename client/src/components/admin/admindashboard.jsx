@@ -12,6 +12,7 @@ import Axios from "axios";
 import ViewUsers from "./viewusers";
 import VerifyRider from "./verifyrider";
 import ViewRides from "./viewRides";
+import Viewreviews from "./viewreviews";
 // import ViewRides from "./viewRides";
 
 const sidebarWidth = 240;
@@ -50,6 +51,10 @@ const AdminDashboard = () => {
       <ListItem button onClick={() => navigate("/admin/bookings")}>
         <ListItemIcon><FaCalendarAlt color="white" /></ListItemIcon>
         <ListItemText primary={`Bookings (${count.bookings})`} />
+      </ListItem>
+      <ListItem button onClick={() => navigate("/admin/viewreview")}>
+        <ListItemIcon><FaCalendarAlt color="white" /></ListItemIcon>
+        <ListItemText primary={`Reviews`} />
       </ListItem>
       <ListItem button onClick={() => navigate("/")}>
         <ListItemIcon><AiOutlineLogout color="white" /></ListItemIcon>
@@ -127,6 +132,7 @@ const AdminDashboard = () => {
           <Route path="/viewusers" element={<ViewUsers />} />
           <Route path="/verifyrider" element={<VerifyRider filter={filter} setFilter={setFilter} />} />
           <Route path="/bookings" element={<ViewRides />} /> 
+          <Route path="/viewreview" element={<Viewreviews/>}/>
         </Routes>
         <Outlet />
       </Box>

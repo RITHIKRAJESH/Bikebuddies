@@ -173,4 +173,14 @@ const Mybooking=async(req,res)=>{
     }
 }
 
-module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking, Mybooking};
+const addReview=async(req,res)=>{
+    try{
+     const {bookid,review,rating}=req.body
+     await riderModel.findByIdAndUpdate({_id:bookid},{review:review,rating:rating,reviewstatus:"pending"})
+     res.json("Review Submitted Successfully")
+    }catch(err){
+        console.log(err)
+    }
+}
+
+module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking, Mybooking,addReview};

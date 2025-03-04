@@ -19,4 +19,6 @@ riderRouter.route('/addvehicle').post(upload.fields([{ name: 'rcBookImage', maxC
 riderRouter.route('/viewvehicle').get(viewVehicle);
 riderRouter.route('/viewrides').get(viewRides)
 riderRouter.route('/updateStatus').put(updateStatus)
+
+
 module.exports = riderRouter;
