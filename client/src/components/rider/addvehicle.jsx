@@ -43,7 +43,7 @@ export default function Addvehicle() {
       headers: { id: userId, "Content-Type": "multipart/form-data" },
     })
       .then((res) => {
-        alert(res.data);
+        alert(res.data.message);
       })
       .catch((err) => {
         console.log(err);
