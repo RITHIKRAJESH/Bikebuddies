@@ -136,7 +136,7 @@ export default function Viewreviews() {
                 <TableCell>{review.review}</TableCell>
                 <TableCell>{review.userId?.fullname}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleReviewClick(review._id)}>View</Button>
+                  <Button onClick={() => handleReviewClick(review._id)}>Post</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -214,7 +214,7 @@ export default function Viewreviews() {
                 <TableCell>{review.review}</TableCell>
                 <TableCell>{review.userId?.fullname}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleReviewClick(review._id)}>View</Button>
+                  <Button onClick={() => handleReviewClick(review._id)}>Post</Button>
                 </TableCell>
               </TableRow>
             ))}

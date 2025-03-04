@@ -68,7 +68,6 @@
 
 // export default HomePage;
 
-
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Button, Container, Box, Typography, Grid, Avatar, TextField, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -76,11 +75,9 @@ import { useMediaQuery } from '@mui/material';
 import { motion } from 'framer-motion';
 import Slider from 'react-slick';
 import { gsap } from 'gsap';
-import person1 from '../images/person_1.jpg';
-import person2 from '../images/person_2.jpg';
+import axios from 'axios';
+import ReactStars from 'react-stars';  // Import react-stars
 import slider1 from '../images/slide1.webp';
-import slider2 from '../images/slider2.jpg';
-
 const navbarStyles = {
   backgroundColor: '#333',
   boxShadow: 'none',
@@ -103,31 +100,45 @@ const buttonStyles1 = {
   },
 };
 
+const defaultAvatar = "https://www.w3schools.com/howto/img_avatar.png"; // Dummy avatar URL
 
 const HomePage = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width:600px)');
-
+  const [reviews, setReviews] = useState([]);
+  
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   useEffect(() => {
+    axios.get("http://localhost:9000/admin/viewreviews")
+      .then((res) => {
+        const reviewsData = res.data;
+        setReviews(reviewsData);
+        console.log(reviewsData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     gsap.fromTo(".header-text", 
       { opacity: 0, y: -100 }, 
       { opacity: 1, y: 0, duration: 1.5, ease: "bounce.out" }
     );
-    
 
     gsap.fromTo(".about-text", 
       { opacity: 0, y: 30 }, 
       { opacity: 1, y: 0, duration: 1.5, ease: "power2.out", stagger: 0.1 }
     );
+
     gsap.fromTo(".testimonial-box", 
       { opacity: 0, y: 50 }, 
       { opacity: 1, y: 0, duration: 1.5, stagger: 0.2, ease: "power2.out", delay: 1.5 }
     );
   }, []);
+
+  const posted=reviews.filter(review=>review.reviewstatus=="posted")
 
   const sliderSettings = {
     dots: true,
@@ -180,11 +191,11 @@ const HomePage = () => {
             <img src={slider1} alt="slider 1" style={{ width: '100%', height: '80vh', objectFit: 'cover' }} />
           </div>
           <div>
-            <img src={slider2} alt="slider 2" style={{ width: '100%', height: '80vh', objectFit: 'fill' }} />
+            <img src="slider2.jpg" alt="slider 2" style={{ width: '100%', height: '80vh', objectFit: 'fill' }} />
           </div>
         </Slider>
       </motion.div>
-      
+
       <Container id="about" sx={{ py: 8 }} className="about-text">
         <Typography variant="h4" textAlign="center" mb={3}>About Us</Typography>
         <Grid container spacing={4}>
@@ -203,24 +214,29 @@ const HomePage = () => {
         <Container>
           <Typography variant="h4" textAlign="center" mb={3}>What Our Customers Say</Typography>
           <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={12} sm={6} md={4}>
-              <Box className="testimonial-box">
-                <Avatar src={person1} alt="John Doe" />
-                <Box>
-                  <Typography variant="h6">John Doe</Typography>
-                  <Typography variant="body2">"Great service! Fast and convenient."</Typography>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Box className="testimonial-box">
-                <Avatar src={person2} alt="Jane Smith" />
-                <Box>
-                  <Typography variant="h6">Jane Smith</Typography>
-                  <Typography variant="body2">"Reliable and affordable bike taxi service!"</Typography>
-                </Box>
-              </Box>
-            </Grid>
+            {posted.length > 0 ? (
+              posted.map((review, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Box className="testimonial-box">
+                    <Avatar src={review.profilePic || defaultAvatar} alt={review.username} />
+                    <Box>
+                      <Typography variant="h6">{review.username}</Typography>
+                      <ReactStars 
+                        count={5} 
+                        value={review.rating} 
+                        size={24} 
+                        edit={false}  // Set edit to false to display the stars as a rating
+                        color2={'#ff7043'}  // Color of the filled stars
+                      />
+                       <Typography variant="body2">"{review.userId.fullname}"</Typography>
+                      <Typography variant="body2">"{review.review}"</Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+              ))
+            ) : (
+              <Typography variant="body1" textAlign="center">No testimonials available.</Typography>
+            )}
           </Grid>
         </Container>
       </motion.section>
