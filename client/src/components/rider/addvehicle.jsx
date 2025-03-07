@@ -11,6 +11,7 @@ import {
   Box,
 } from "@mui/material";
 import AXIOS from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Addvehicle() {
   const [vehicleName, setVehicleName] = useState("");
@@ -21,7 +22,8 @@ export default function Addvehicle() {
   const [licenseImage, setLicenseImage] = useState([]);
   const [vehicleImage, setVehicleImage] = useState([]);
   const [place, setPlace] = useState("");
-
+  
+  const navigate=useNavigate()
   const userId =localStorage.getItem("id");
 
   const handleSubmit = (e) => {
@@ -44,6 +46,8 @@ export default function Addvehicle() {
     })
       .then((res) => {
         alert(res.data.message);
+        navigate("/rider/viewvehicle")
+        window.location.reload()
       })
       .catch((err) => {
         console.log(err);

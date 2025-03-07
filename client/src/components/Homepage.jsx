@@ -1,73 +1,3 @@
-// import React from 'react';
-// import { AppBar, Toolbar, Button, Container, Box, Typography, Grid, Avatar, TextField } from '@mui/material';
-// import { motion } from 'framer-motion';
-// import Slider from 'react-slick';
-// import { gsap } from 'gsap';
-// import { useEffect } from 'react';
-
-// const navbarStyles = {
-//   backgroundColor: '#333',
-//   boxShadow: 'none',
-// };
-
-// import person1 from '../images/person_1.jpg';
-// import person2 from '../images/person_2.jpg';
-// import person3 from '../images/person_3.jpg';
-// import slider1 from '../images/slide1.webp';
-// import slider2 from '../images/slider2.jpg';
-
-
-// const buttonStyles = {
-//   marginLeft: '20px',
-//   backgroundColor: '#ff7043',
-//   color: 'white',
-//   '&:hover': {
-//     backgroundColor: '#f4511e',
-//   },
-// };
-
-// const HomePage = () => {
-
-
-//   const sliderSettings = {
-//     dots: true,
-//     infinite: true,
-//     speed: 500,
-//     slidesToShow: 1,
-//     slidesToScroll: 1,
-//   };
-
-//   return (
-//     <div>
-//       <AppBar position="sticky" sx={navbarStyles}>
-//         <Toolbar>
-//           <Typography variant="h6">Bike Taxi Service</Typography>
-//           <Box ml="auto">
-//             <Button sx={buttonStyles} href="#about">About</Button>
-//             <Button sx={buttonStyles} href="#testimonials">Testimonials</Button>
-//             <Button sx={buttonStyles} href="#contact">Contact</Button>
-//             <Button sx={buttonStyles} href="/login">Login</Button>
-//           </Box>
-//         </Toolbar>
-//       </AppBar>
-
-//       <motion.div className="header-text">
-//         <Slider {...sliderSettings}>
-//           <div>
-//             <img src={slider1} alt="slider 1" style={{ width: '100%', height: '80vh', objectFit: 'fill' }} />
-//           </div>
-//           <div>
-//             <img src={slider2} alt="slider 2" style={{ width: '100%', height: '80vh', objectFit: 'fill' }} />
-//           </div>
-//         </Slider>
-//       </motion.div>
-
-//     </div>
-//   );
-// };
-
-// export default HomePage;
-
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Button, Container, Box, Typography, Grid, Avatar, TextField, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -78,6 +8,7 @@ import { gsap } from 'gsap';
 import axios from 'axios';
 import ReactStars from 'react-stars';  // Import react-stars
 import slider1 from '../images/slide1.webp';
+
 const navbarStyles = {
   backgroundColor: '#333',
   boxShadow: 'none',
@@ -107,8 +38,85 @@ const HomePage = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
   const [reviews, setReviews] = useState([]);
   
+  // Contact form state
+  const [contact, setContact] = useState({
+    Name: '',
+    Email: '',
+    Message: '',
+  });
+
+  const [errors, setErrors] = useState({
+    Name: '',
+    Email: '',
+    Message: '',
+  });
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    setContact({
+      ...contact,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Simple email validation
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  // Validation function
+  const validateForm = () => {
+    let formIsValid = true;
+    const newErrors = { Name: '', Email: '', Message: '' };
+
+    // Validate Name
+    if (!contact.Name) {
+      newErrors.Name = 'Name is required.';
+      formIsValid = false;
+    }
+
+    // Validate Email
+    if (!contact.Email) {
+      newErrors.Email = 'Email is required.';
+      formIsValid = false;
+    } else if (!validateEmail(contact.Email)) {
+      newErrors.Email = 'Please enter a valid email address.';
+      formIsValid = false;
+    }
+
+    // Validate Message
+    if (!contact.Message) {
+      newErrors.Message = 'Message is required.';
+      formIsValid = false;
+    }
+
+    setErrors(newErrors);
+    return formIsValid;
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Validate form
+    if (!validateForm()) {
+      return; // Don't submit if form is invalid
+    }
+
+    // Send contact data to backend
+    axios.post("http://localhost:9000/user/contact", contact)
+      .then((res) => {
+        alert(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("There was an error submitting the form.");
+      });
   };
 
   useEffect(() => {
@@ -138,7 +146,7 @@ const HomePage = () => {
     );
   }, []);
 
-  const posted=reviews.filter(review=>review.reviewstatus=="posted")
+  const posted = reviews.filter(review => review.reviewstatus === "posted");
 
   const sliderSettings = {
     dots: true,
@@ -245,10 +253,49 @@ const HomePage = () => {
         <Typography variant="h4" textAlign="center" mb={3}>Contact Us</Typography>
         <Grid container justifyContent="center">
           <Grid item xs={12} sm={8} md={6}>
-            <TextField fullWidth label="Name" margin="normal" />
-            <TextField fullWidth label="Email" margin="normal" />
-            <TextField fullWidth label="Message" margin="normal" multiline rows={4} />
-            <Button fullWidth sx={buttonStyles1} style={{ marginTop: '10px' }}>Send Enquiry</Button>
+            {/* Contact Form */}
+            <form onSubmit={handleSubmit}>
+              <TextField 
+                fullWidth 
+                label="Name" 
+                margin="normal" 
+                name="Name"
+                value={contact.Name}
+                onChange={handleChange}
+                error={Boolean(errors.Name)}  // Show error if validation fails
+                helperText={errors.Name}
+              />
+              <TextField 
+                fullWidth 
+                label="Email" 
+                margin="normal" 
+                name="Email"
+                value={contact.Email}
+                onChange={handleChange}
+                error={Boolean(errors.Email)}  // Show error if validation fails
+                helperText={errors.Email}
+              />
+              <TextField 
+                fullWidth 
+                label="Message" 
+                margin="normal" 
+                name="Message"
+                value={contact.Message}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                error={Boolean(errors.Message)}  // Show error if validation fails
+                helperText={errors.Message}
+              />
+              <Button 
+                type="submit" 
+                fullWidth 
+                sx={buttonStyles1} 
+                style={{ marginTop: '10px' }}
+              >
+                Send Enquiry
+              </Button>
+            </form>
           </Grid>
         </Grid>
       </Container>

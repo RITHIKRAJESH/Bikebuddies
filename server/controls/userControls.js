@@ -2,13 +2,14 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const userModel = require('../models/userModel');
 const riderModel = require('../models/bookride');
-const vehicleModel=require('../models/bikemodel')
+const vehicleModel=require('../models/bikemodel');
+const contactModel=require('../models/contact')
 // Create a Nodemailer transporter object
 const transporter = nodemailer.createTransport({
     service: 'gmail', // Use the email provider (e.g., Gmail, Outlook, etc.)
     auth: {   
         user: "rajeshrithik49@gmail.com", // Replace with your email
-        pass: "rasj auvd oxsh qsjp"  // Replace with your email password or app-specific password
+        pass: "wjqo hcwa blhb dmjq"  // Replace with your email password or app-specific password
     },
 });
 
@@ -183,4 +184,17 @@ const addReview=async(req,res)=>{
     }
 }
 
-module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking, Mybooking,addReview};
+
+const addMessage=(req,res)=>{
+    const {Name,Message,Email}=req.body;
+    if(!Name || !Message || !Email){
+        res.json("All Fields are required")
+    }
+    const contact=new contactModel({
+        Name,Message,Email
+    })
+    contact.save()
+    res.json("Message Received Successfully")
+}
+
+module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking, Mybooking,addReview,addMessage};

@@ -1,7 +1,7 @@
 const express=require('express');
 const userRouter=express.Router();
 
-const {registerUser,loginUser,verifyOTP, viewVehicle, booking, Mybooking, addReview}=require('../controls/userControls');
+const {registerUser,loginUser,verifyOTP, viewVehicle, booking, Mybooking, addReview, addMessage}=require('../controls/userControls');
 
 userRouter.route('/register').post(registerUser);
 userRouter.route('/login').post(loginUser);
@@ -10,5 +10,6 @@ userRouter.route('/viewbikes').get(viewVehicle)
 userRouter.route("/bookride").post(booking)
 userRouter.route("/viewmybookings").get(Mybooking)
 userRouter.route("/addReview").post(addReview)
+userRouter.route("/contact").post(addMessage)
 
 module.exports=userRouter;
