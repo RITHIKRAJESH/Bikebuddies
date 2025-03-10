@@ -37,7 +37,7 @@ export default function Navbar() {
           <MenuItem onClick={() => { handleClose(); navigate('/rider/viewbooking'); }}>View Booking</MenuItem>
           <MenuItem onClick={() => { handleClose(); navigate('/rider/completedrides'); }}>Completed Rides</MenuItem>
         </Menu>
-        <Button color="inherit">Rating</Button>
+        <Button color="inherit" onClick={() => { handleClose(); navigate('/rider/viewrating');}}>Rating</Button>
         <Button color="inherit" onClick={() => {navigate('/')
           localStorage.clear()
         }}>Logout</Button>

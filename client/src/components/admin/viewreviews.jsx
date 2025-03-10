@@ -82,7 +82,7 @@ export default function Viewreviews() {
               <TableCell>Rating</TableCell>
               <TableCell>Review</TableCell>
               <TableCell>User</TableCell>
-              {/* <TableCell>Action</TableCell> */}
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -96,9 +96,9 @@ export default function Viewreviews() {
                 <TableCell>{review.rating}</TableCell>
                 <TableCell>{review.review}</TableCell>
                 <TableCell>{review.userId?.fullname}</TableCell>
-                {/* <TableCell>
+                <TableCell>
                   <Button onClick={() => handleReviewClick(review._id)}>POST</Button>
-                </TableCell> */}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

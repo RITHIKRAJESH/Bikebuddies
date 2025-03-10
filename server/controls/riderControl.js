@@ -189,16 +189,26 @@ const viewRides = async (req, res) => {
     }
   };
 
-  const viewRating=async(req,res)=>{
-    try{
-        const id=req.headers.id
-        const vehicles=await vehicleModel.find({userId:id})
-        const rides=await vehicleModel.find({})
-    }catch(err){
-
+  const viewRating = async (req, res) => {
+    try {
+      const id = req.headers.id; // Get the userId from the request headers
+      // Fetch vehicles associated with the userId
+      const vehicles = await vehicleModel.find({ userId: id });
+  
+      if (!vehicles || vehicles.length === 0) {
+        return res.status(404).json({ message: 'No vehicles found for this user.' });
+      }
+      const vehicleIds = vehicles.map(vehicle => vehicle._id); 
+      const rides = await riderModel.find({ vehicleId: { $in: vehicleIds }, status: 'Completed' });
+      console.log(rides);
+      res.json(rides); 
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: 'Server error' });
     }
-  }
+  };
   
   
 
-module.exports = { addVehicle,viewVehicle,viewRides,updateStatus,deleteVehicle,updateVehicle,riderDashboard};
+
+module.exports = { addVehicle,viewVehicle,viewRides,updateStatus,deleteVehicle,updateVehicle,riderDashboard,viewRating};

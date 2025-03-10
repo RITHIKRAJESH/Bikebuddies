@@ -196,5 +196,31 @@ const addMessage=(req,res)=>{
     contact.save()
     res.json("Message Received Successfully")
 }
+const profile = async (req, res) => {
+    try {
+      const userid = req.headers.id;
+      
+      // Fetch user data using findOne (assuming only one user per ID)
+      const user = await userModel.findOne({ _id: userid });
+  
+      // Ensure user was found
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // Fetch completed rides using the appropriate model (assuming it's rideModel, not userModel)
+      const rides = await riderModel.find({ userId: userid, status: "Completed" });
+  
+      console.log(user);
+      console.log(rides);
+  
+      // Respond with user and completed rides
+      res.json({ user, rides});
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "An error occurred", error: err.message });
+    }
+  };
+  
 
-module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking, Mybooking,addReview,addMessage};
+module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking, Mybooking,addReview,addMessage,profile};

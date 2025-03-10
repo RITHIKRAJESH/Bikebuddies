@@ -1,6 +1,6 @@
 const express = require('express');
 const riderRouter = express.Router();
-const { addVehicle,viewVehicle, viewRides, updateStatus, deleteVehicle, updateVehicle, riderDashboard} = require('../controls/riderControl');
+const { addVehicle,viewVehicle, viewRides, updateStatus, deleteVehicle, updateVehicle, riderDashboard, viewRating} = require('../controls/riderControl');
 
 const multer = require('multer');
 const path = require('path');
@@ -22,5 +22,7 @@ riderRouter.route('/updateStatus').put(updateStatus)
 riderRouter.route('/deleteVehicle').delete(deleteVehicle)
 riderRouter.route('/updatevehicle').put(upload.fields([{ name: 'rcBookImage', maxCount: 2 }, { name: 'insuranceImage', maxCount: 2 }, { name: 'licenseImage', maxCount: 2 }, { name: 'vehicleImage', maxCount: 2 }]),updateVehicle);
 riderRouter.route('/viewtravel').get(riderDashboard)
+riderRouter.route('/viewrating').get(viewRating)
+
 
 module.exports = riderRouter;

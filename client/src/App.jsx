@@ -3,6 +3,8 @@ import { Suspense, lazy } from "react";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import CompletedRides from "./components/rider/completedRids";
+import Viewrating from "./components/rider/viewrating";
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Lazy-loaded components
 const HomePage = lazy(() => import("./components/Homepage"));
@@ -15,10 +17,11 @@ const Viewvehicles = lazy(() => import("./components/rider/viewvehicles"));
 const Addvehicle = lazy(() => import("./components/rider/addvehicle"));
 const RiderViewbookings = lazy(() => import("./components/rider/viewbookings"));
 const AdminDashboard = lazy(() => import("./components/admin/admindashboard"));
-const Viewusers = lazy(() => import("./components/admin/viewusers"));
-const Viewreviews = lazy(() => import("./components/admin/viewreviews"));
-const Verifyrider = lazy(() => import("./components/admin/verifyrider"));
-const ViewRides = lazy(() => import("./components/admin/viewRides"));
+const Profile=lazy(()=> import("./components/user/profile"))
+// const Viewusers = lazy(() => import("./components/admin/viewusers"));
+// const Viewreviews = lazy(() => import("./components/admin/viewreviews"));
+// const Verifyrider = lazy(() => import("./components/admin/verifyrider"));
+// const ViewRides = lazy(() => import("./components/admin/viewRides"));
 
 // Loading fallback component
 const Loading = () => <div style={{ textAlign: "center", marginTop: "20%" }}>Loading...</div>;
@@ -37,13 +40,14 @@ function App() {
         {/* User Routes */}
         <Route path="/user/bookride" element={<BookRide />} />
         <Route path="/user/history" element={<RideHistory />} />
-
+        <Route path="/user/profile" element={<Profile />} />
         {/* Rider Routes */}
         <Route path="/rider/*" element={<Riderhome />} />
         <Route path="/rider/viewvehicle" element={<Viewvehicles />} />
         <Route path="/rider/addvehicle" element={<Addvehicle />} />
         <Route path="/rider/viewbooking" element={<RiderViewbookings />} />
         <Route path="/rider/completedrides" element={<CompletedRides/>}/>
+        <Route path="/rider/viewrating" element={<Viewrating/>}/>
         {/* Admin Routes */}
         <Route path="/admin/*" element={<AdminDashboard />} />
         {/* <Route path="/admin/viewusers" element={<Viewusers />} />

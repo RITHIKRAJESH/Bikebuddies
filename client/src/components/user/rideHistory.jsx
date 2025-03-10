@@ -409,6 +409,49 @@ export default function RideHistory() {
         .close-modal:hover {
           background-color: #e53935;
         }
+
+         .btnReview {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out; /* Smooth transition for hover effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-transform: uppercase; /* Uppercase text */
+    text-align: center; /* Center align text */
+    margin-top: 10px;
+  }
+
+  /* Hover effect */
+  .btnReview:hover {
+    background-color: #45a049; /* Darker green on hover */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+    transform: scale(1.05); /* Slightly scale the button */
+  }
+
+  /* Active state (when the button is clicked) */
+  .btnReview:active {
+    transform: scale(0.98); /* Shrink slightly when clicked */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Smaller shadow when clicked */
+  }
+
+  /* Focus state (when the button is focused) */
+  .btnReview:focus {
+    outline: none;
+    border: 2px solid #4CAF50; /* Green border when focused */
+  }
+
+  /* Additional styling for better readability */
+  .btnReview:disabled {
+    background-color: #a5d6a7; /* Disabled button with a light green */
+    cursor: not-allowed; /* Disable pointer */
+    box-shadow: none; /* Remove shadow on disabled */
+  }
       `}</style>
     </>
   );

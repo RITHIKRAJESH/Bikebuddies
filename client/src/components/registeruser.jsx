@@ -14,8 +14,6 @@ const FormContainer = styled(motion.div)({
     boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
 });
 
-
-
 const RegisterPage = () => {
     const [fullname, setFullName] = useState('');
     const [email, setEmail] = useState('');
@@ -25,7 +23,12 @@ const RegisterPage = () => {
     const [otp, setOtp] = useState('');
     const [isOtpSent, setIsOtpSent] = useState(false);
 
-    const navigate=useNavigate();
+    const [fullnameError, setFullnameError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [otpError, setOtpError] = useState('');
+
+    const navigate = useNavigate();
 
     const handleToggle = (event, newRole) => {
         if (newRole !== null) {
@@ -35,6 +38,40 @@ const RegisterPage = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // Reset previous errors
+        setFullnameError('');
+        setEmailError('');
+        setPasswordError('');
+        setOtpError('');
+        setError(null);
+
+        // Validate fields
+        let valid = true;
+
+        // Full name validation
+        if (!fullname) {
+            setFullnameError('Full Name is required.');
+            valid = false;
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            setEmailError('Please enter a valid email address.');
+            valid = false;
+        }
+
+        // Password validation
+        if (!password) {
+            setPasswordError('Password is required.');
+            valid = false;
+        } else if (password.length < 6) {
+            setPasswordError('Password must be at least 6 characters long.');
+            valid = false;
+        }
+
+        if (!valid) return; // Stop submission if validation fails
 
         const payload = { email, password, role, fullname };
         const url = 'http://localhost:9000/user/register';
@@ -59,6 +96,16 @@ const RegisterPage = () => {
 
     const handleOtpSubmit = async () => {
         const email = localStorage.getItem('email');
+
+        // OTP validation
+        if (!otp) {
+            setOtpError('OTP is required.');
+            return;
+        } else if (isNaN(otp)) {
+            setOtpError('OTP must be a number.');
+            return;
+        }
+
         try {
             const response = await axios.post('http://localhost:9000/user/verify-otp', { email, otp });
             alert(response.data.message);
@@ -75,6 +122,7 @@ const RegisterPage = () => {
                     <FormContainer whileHover={{ scale: 1.02 }}>
                         <Typography variant="h5" textAlign="center" mb={2} fontWeight={600}>Register</Typography>
 
+                        {/* Full Name Field */}
                         <TextField
                             fullWidth
                             label="Full Name"
@@ -82,7 +130,11 @@ const RegisterPage = () => {
                             required
                             value={fullname}
                             onChange={(e) => setFullName(e.target.value)}
+                            error={!!fullnameError}
+                            helperText={fullnameError}
                         />
+
+                        {/* Email Field */}
                         <TextField
                             fullWidth
                             label="Email"
@@ -91,7 +143,11 @@ const RegisterPage = () => {
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            error={!!emailError}
+                            helperText={emailError}
                         />
+
+                        {/* Password Field */}
                         <TextField
                             fullWidth
                             label="Password"
@@ -100,8 +156,11 @@ const RegisterPage = () => {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            error={!!passwordError}
+                            helperText={passwordError}
                         />
 
+                        {/* Role Toggle */}
                         <ToggleButtonGroup
                             value={role}
                             exclusive
@@ -115,6 +174,7 @@ const RegisterPage = () => {
 
                         {error && <Typography color="error" variant="body2" textAlign="center" mt={2}>{error}</Typography>}
 
+                        {/* OTP Field (Only displayed if OTP is sent) */}
                         {isOtpSent && (
                             <>
                                 <TextField
@@ -125,6 +185,8 @@ const RegisterPage = () => {
                                     required
                                     value={otp}
                                     onChange={(e) => setOtp(e.target.value)}
+                                    error={!!otpError}
+                                    helperText={otpError}
                                 />
                                 <motion.div whileTap={{ scale: 0.9 }}>
                                     <Button
@@ -140,6 +202,7 @@ const RegisterPage = () => {
                             </>
                         )}
 
+                        {/* Register Button */}
                         <motion.div whileTap={{ scale: 0.9 }}>
                             <Button
                                 fullWidth

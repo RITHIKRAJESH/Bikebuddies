@@ -14,41 +14,70 @@ const FormContainer = styled(motion.div)({
     borderRadius: '15px',
     boxShadow: '0 8px 20px rgba(0,0,0,0.2)', 
 });
+
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
-    const navigate=useNavigate()
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // Reset previous errors
+        setEmailError('');
+        setPasswordError('');
+        setError(null);
+
+        // Validate email and password
+        let valid = true;
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            setEmailError('Please enter a valid email address.');
+            valid = false;
+        }
+
+        // Password validation
+        if (!password) {
+            setPasswordError('Password cannot be empty.');
+            valid = false;
+        } else if (password.length < 6) {
+            setPasswordError('Password must be at least 6 characters long.');
+            valid = false;
+        }
+
+        if (!valid) {
+            return; // Stop submission if validation fails
+        }
+
         const payload = { email, password };
         const url = 'http://localhost:9000/user/login';
-            await axios.post(url, payload)
-            .then((res) => {
-                console.log(res.data);
-                const response=res.data;
-                localStorage.setItem("id",response.user._id);
-                if(response.user.role=="rider"){
-                    alert("Login Successfull welcome rider")
-                    navigate("/rider")
-                }
-                else if(response.user.role=="user"){
-                    alert("Login Successfull welcome user")
-                    navigate("/user/bookride")
-                }
-                else if(response.user.role=="admin"){
-                    alert("Login Successfull welcome admin")
-                    navigate("/admin")
-                }
-               
+
+        try {
+            const res = await axios.post(url, payload);
+            console.log(res.data);
+            const response = res.data;
+            localStorage.setItem("id", response.user._id);
+            if (response.user.role === "rider") {
+                alert("Login successful! Welcome rider.");
+                navigate("/rider");
+            } else if (response.user.role === "user") {
+                alert("Login successful! Welcome user.");
+                navigate("/user/bookride");
+            } else if (response.user.role === "admin") {
+                alert("Login successful! Welcome admin.");
+                navigate("/admin");
             }
-            )
-        .catch((error)=>{
+        } catch (error) {
             setError('Something went wrong!');
             console.log(error);
-        })
-    }
+        }
+    };
+
     return (
         <Container>
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -56,6 +85,7 @@ const LoginPage = () => {
                     <FormContainer whileHover={{ scale: 1.02 }}>
                         <Typography variant="h5" textAlign="center" mb={2} fontWeight={600}>Login</Typography>
 
+                        {/* Email Field */}
                         <TextField
                             fullWidth
                             label="Email"
@@ -64,7 +94,11 @@ const LoginPage = () => {
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            error={!!emailError}
+                            helperText={emailError}
                         />
+
+                        {/* Password Field */}
                         <TextField
                             fullWidth
                             label="Password"
@@ -73,8 +107,11 @@ const LoginPage = () => {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            error={!!passwordError}
+                            helperText={passwordError}
                         />
 
+                        {/* General error */}
                         {error && <Typography color="error" variant="body2" textAlign="center" mt={2}>{error}</Typography>}
 
                         <motion.div whileTap={{ scale: 0.9 }}>
