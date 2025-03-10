@@ -41,7 +41,7 @@ export default function CompletedRides() {
                   <p className="details">🆔 Booking ID: <span className="id">{ride._id}</span></p>
                   <p className="details">📍 Start: <span className="highlight">{ride.startAddress}</span></p>
                   <p className="details">🚩 End: <span className="highlight">{ride.endAddress}</span></p>
-                  <p className="details">🚗 Distance: <span className="highlight">{ride.totalDistance} km</span></p>
+                  <p className="details">🚗 Distance: <span className="highlight">{ride.totalDistance}</span></p>
                   <p className="details">💵 Amount: <span className="highlight">₹{ride.fare}</span></p>
 
                   {/* Status Indicator */}

@@ -1,7 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './navbar';
+import axios from 'axios';
 
 export default function Riderhome() {
+  const [record, setRecord] = useState({});
+  const userId = localStorage.getItem('id');
+
+  useEffect(() => {
+    if (!userId) return; // Ensure userId is present before making API call
+
+    axios.get("http://localhost:9000/rider/viewtravel", { headers: { id: userId } })
+      .then((res) => {
+        setRecord(res.data);
+        console.log(res.data); // You can remove this log in production
+      })
+      .catch((err) => {
+        console.log(err);
+        // Handle error gracefully, possibly show an error message in the UI
+      });
+  }, [userId]);
+
+  // Safe parsing for totalKilometers
+  let totalKilometers = 0;
+  if (record.totalKilometers && typeof record.totalKilometers === 'string') {
+    const kilometersString = record.totalKilometers.replace('km', '').trim(); // Remove 'km'
+    const numbersArray = kilometersString.split(' ').map(num => parseFloat(num)).filter(num => !isNaN(num)); // Convert to numbers and filter out any NaN values
+    totalKilometers = numbersArray.reduce((acc, currentValue) => acc + currentValue, 0);
+  }
+
   return (
     <>
       <Navbar />
@@ -11,24 +37,17 @@ export default function Riderhome() {
         <div style={styles.statsContainer}>
           <div style={styles.statsCard}>
             <h3>Total Rides</h3>
-            <p>42</p> {/* Replace with dynamic data */}
+            <p>{record.totalRidesCount || 0}</p> {/* Fallback if data is missing */}
           </div>
           <div style={styles.statsCard}>
             <h3>Total Earnings</h3>
-            <p>$350</p> {/* Replace with dynamic data */}
+            <p>{record.totalEarnings || 0}</p> {/* Fallback if data is missing */}
           </div>
           <div style={styles.statsCard}>
             <h3>Kilometers Ridden</h3>
-            <p>1200 km</p> {/* Replace with dynamic data */}
+            <p>{totalKilometers} km</p> {/* Safely display total kilometers */}
           </div>
         </div>
-
-        {/* <div style={styles.quickActions}>
-          <button style={styles.quickActionButton}>View My Vehicles</button>
-          <button style={styles.quickActionButton}>Start a Ride</button>
-          <button style={styles.quickActionButton}>View Earnings</button>
-          <button style={styles.quickActionButton}>Settings</button>
-        </div> */}
 
         <div style={styles.news}>
           <h2>Latest Updates</h2>
@@ -42,7 +61,31 @@ export default function Riderhome() {
           </div>
         </div>
 
-        {/* <button style={styles.floatingButton}>+</button> */}
+        {/* Dummy Riding Policies Section */}
+        <div style={styles.policies}>
+          <h2>Riding Policies</h2>
+          <div style={styles.policyCard}>
+            <h3>1. Safe Driving</h3>
+            <p>Always wear a helmet and ensure that your vehicle is in good condition before starting the ride. Safety is the top priority.</p>
+          </div>
+          <div style={styles.policyCard}>
+            <h3>2. Respect Traffic Laws</h3>
+            <p>Follow all local traffic rules and regulations. Avoid speeding and always use signals when changing lanes or turning.</p>
+          </div>
+          <div style={styles.policyCard}>
+            <h3>3. Customer Courtesy</h3>
+            <p>Always greet the customer with respect and maintain a friendly attitude. Ensure that your vehicle is clean and comfortable.</p>
+          </div>
+          <div style={styles.policyCard}>
+            <h3>4. Alcohol and Drugs</h3>
+            <p>Riding under the influence of alcohol or drugs is strictly prohibited. It not only endangers your safety but also violates company policy.</p>
+          </div>
+          <div style={styles.policyCard}>
+            <h3>5. Punctuality</h3>
+            <p>Ensure that you arrive on time for all rides. If you are going to be late, inform the customer as early as possible.</p>
+          </div>
+        </div>
+
       </div>
     </>
   );
@@ -70,23 +113,6 @@ const styles = {
     textAlign: 'center',
     width: '30%',
   },
-  quickActions: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    marginTop: '30px',
-  },
-  quickActionButton: {
-    backgroundColor: '#ff6600',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    padding: '10px 20px',
-    fontSize: '16px',
-    margin: '10px',
-    cursor: 'pointer',
-    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
-  },
   news: {
     marginTop: '30px',
   },
@@ -97,21 +123,14 @@ const styles = {
     borderRadius: '8px',
     boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
   },
-  floatingButton: {
-    position: 'fixed',
-    bottom: '20px',
-    right: '20px',
-    backgroundColor: '#ff6600',
-    color: 'white',
-    border: 'none',
-    borderRadius: '50%',
-    width: '60px',
-    height: '60px',
-    fontSize: '30px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    cursor: 'pointer',
-    boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+  policies: {
+    marginTop: '40px',
+  },
+  policyCard: {
+    backgroundColor: '#f9f9f9',
+    padding: '15px',
+    margin: '10px 0',
+    borderRadius: '8px',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
   },
 };

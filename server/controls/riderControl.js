@@ -139,4 +139,66 @@ const viewRides = async (req, res) => {
     }
   }
 
-module.exports = { addVehicle,viewVehicle,viewRides,updateStatus,deleteVehicle,updateVehicle};
+
+  const riderDashboard = async (req, res) => {
+    try {
+      const id = req.headers.id;
+  
+      // Find all vehicles owned by this user
+      const vehicles = await vehicleModel.find({ userId: id });
+  
+      // Initialize accumulators for total kilometers, total earnings, and total completed rides
+      let totalKilometers = 0;
+      let totalEarnings = 0;
+      let totalRidesCount = 0;
+  
+      // Loop through each vehicle to fetch rides and sum distances, fares, and completed rides
+      for (const vehicle of vehicles) {
+        // Find all rides associated with each vehicle
+        const rides = await riderModel.find({ vehicleId: vehicle._id });
+  
+        // Loop through each ride to calculate total distance, earnings, and completed rides count
+        rides.forEach(ride => {
+          // If totalDistance exists, add it to totalKilometers
+          if (ride.totalDistance ) {
+            totalKilometers += ride.totalDistance;
+          }
+  
+          // If the ride is completed, add to the total rides count
+          if (ride.status === "Completed") {
+            totalRidesCount += 1;
+  
+            // If there's a fare, add it to totalEarnings
+            if (ride.fare) {
+              totalEarnings += ride.fare;
+            }
+          }
+        });
+      }
+  
+      // Send the results back to the client
+      res.status(200).json({
+        totalKilometers,
+        totalEarnings,
+        totalRidesCount
+      });
+  
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'An error occurred while fetching rider dashboard data' });
+    }
+  };
+
+  const viewRating=async(req,res)=>{
+    try{
+        const id=req.headers.id
+        const vehicles=await vehicleModel.find({userId:id})
+        const rides=await vehicleModel.find({})
+    }catch(err){
+
+    }
+  }
+  
+  
+
+module.exports = { addVehicle,viewVehicle,viewRides,updateStatus,deleteVehicle,updateVehicle,riderDashboard};
