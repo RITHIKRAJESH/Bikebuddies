@@ -159,7 +159,7 @@ const sendOTPEmail1 = async (email, otp) => {
         service: 'gmail', // Use the email provider (e.g., Gmail, Outlook, etc.)
         auth: {   
             user: "rajeshrithik49@gmail.com", // Replace with your email
-            pass: "wjqo hcwa blhb dmjq"  // Replace with your email password or app-specific password
+            pass: ""  // Replace with your email password or app-specific password
         },
     });
   
