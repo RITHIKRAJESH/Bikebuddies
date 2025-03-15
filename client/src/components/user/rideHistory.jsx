@@ -99,6 +99,7 @@ export default function RideHistory() {
                   <div className="mb-3">
                     <p className="text-md font-semibold text-gray-600">🚗 Distance: <span className="text-gray-800">{ride.totalDistance}</span></p>
                     <p className="text-md font-semibold text-gray-600">💵 Amount: <span className="text-gray-800">{ride.fare}</span></p>
+                    <p className="text-md font-semibold text-gray-600">💵 Payment Status: <span className="text-gray-800">{ride.paymentStatus}</span></p>
                   </div>
 
                   <div className="mb-3">

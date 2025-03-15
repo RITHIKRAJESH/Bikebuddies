@@ -38,6 +38,9 @@ const rideSchema=new mongoose.Schema({
     },
     reviewstatus:{
         type:String
+    },
+    paymentStatus:{
+        type:String
     }
 },{timestamps:true});
 

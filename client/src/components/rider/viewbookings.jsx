@@ -402,6 +402,7 @@ export default function RiderViewBookings() {
                   <p className="details">🆔 Booking ID: <span className="id">{ride._id}</span></p>
                   <p className="details">📍 Start: <span className="highlight">{ride.startAddress}</span></p>
                   <p className="details">🚩 End: <span className="highlight">{ride.endAddress}</span></p>
+                  <p className="details">💵 Payment: <span className="highlight">₹{ride.paymentStatus}</span></p>
                   <p className="details">🚗 Distance: <span className="highlight">{ride.totalDistance}</span></p>
                   <p className="details">💵 Amount: <span className="highlight">₹{ride.fare}</span></p>
 
