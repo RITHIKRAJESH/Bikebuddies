@@ -18,6 +18,7 @@ const Addvehicle = lazy(() => import("./components/rider/addvehicle"));
 const RiderViewbookings = lazy(() => import("./components/rider/viewbookings"));
 const AdminDashboard = lazy(() => import("./components/admin/admindashboard"));
 const Profile=lazy(()=> import("./components/user/profile"))
+const RiderProfile=lazy(()=> import("./components/rider/profile"))
 // const Viewusers = lazy(() => import("./components/admin/viewusers"));
 // const Viewreviews = lazy(() => import("./components/admin/viewreviews"));
 // const Verifyrider = lazy(() => import("./components/admin/verifyrider"));
@@ -48,6 +49,7 @@ function App() {
         <Route path="/rider/viewbooking" element={<RiderViewbookings />} />
         <Route path="/rider/completedrides" element={<CompletedRides/>}/>
         <Route path="/rider/viewrating" element={<Viewrating/>}/>
+        <Route path="/rider/profile" element={<RiderProfile />} />
         {/* Admin Routes */}
         <Route path="/admin/*" element={<AdminDashboard />} />
         {/* <Route path="/admin/viewusers" element={<Viewusers />} />

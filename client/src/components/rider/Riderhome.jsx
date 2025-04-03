@@ -8,8 +8,9 @@ export default function Riderhome() {
 
   useEffect(() => {
     if (!userId) return; // Ensure userId is present before making API call
-
-    axios.get("http://localhost:9000/rider/viewtravel", { headers: { id: userId } })
+    const url = import.meta.env.VITE_BASE_URL;
+    console.log(url);
+    axios.get(`${url}/rider/viewtravel`, { headers: { id: userId } })
       .then((res) => {
         setRecord(res.data);
         console.log(res.data); // You can remove this log in production

@@ -6,10 +6,12 @@ import Userhome from './usernav';
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [rides, setRides] = useState([]);
-
+ 
   useEffect(() => {
+    const url = import.meta.env.VITE_BASE_URL;
+    console.log(url);
     const userid = localStorage.getItem("id");
-    axios.get("http://localhost:9000/user/profile", { headers: { id: userid } })
+    axios.get(`${url}/user/profile`, { headers: { id: userid } })
       .then((res) => {
         console.log(res.data);
         setUser(res.data.user); // Set user details

@@ -189,7 +189,7 @@ const LoginPage = () => {
                     alert("OTP sent to your email address.");
                 }
             } catch (error) {
-                setError('Failed to send OTP. Please try again later.');
+                setError('Failed to send OTP. Please Check the email id.');
                 console.log(error);
             }
         } else {
@@ -228,6 +228,7 @@ const LoginPage = () => {
     };
 
     return (
+        <div style={{background: 'linear-gradient(135deg, #1e1e1e 30%, #ff7043 100%)'}}>
         <Container>
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
                 <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
@@ -290,6 +291,7 @@ const LoginPage = () => {
                 </motion.div>
             </Box>
         </Container>
+        </div>
     );
 };
 

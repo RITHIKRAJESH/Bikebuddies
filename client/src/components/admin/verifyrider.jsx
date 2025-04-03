@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
@@ -8,7 +8,9 @@ export default function VerifyRider() {
     const [selectedRider, setSelectedRider] = useState(null);
 
     useEffect(() => {
-        axios.get("http://localhost:9000/admin/viewriders")
+        const url = import.meta.env.VITE_BASE_URL;
+  console.log(url);
+        axios.get(`${url}/admin/viewriders`)
             .then((res) => {
                 setRiders(res.data);
             }).catch((err) => {
@@ -25,9 +27,10 @@ export default function VerifyRider() {
         setOpen(false);
         setSelectedRider(null);
     };
-
+    const url = import.meta.env.VITE_BASE_URL;
+    console.log(url);
     const verifyUser = (id) => {
-        axios.put(`http://localhost:9000/admin/verifyrider/${id}`)
+        axios.put(`${url}/admin/verifyrider/${id}`)
           .then((res) => {
             alert(res.data);
             setRiders((prevRiders) =>
@@ -40,7 +43,7 @@ export default function VerifyRider() {
     };
 
     const deleteUser = (id) => {
-        axios.delete(`http://localhost:9000/admin/deleteuser/${id}`)
+        axios.delete(`${url}/admin/deleteuser/${id}`)
           .then((res) => {
             alert(res.data);
             setRiders((prevRiders) => prevRiders.filter((r) => r._id !== id));
@@ -94,14 +97,14 @@ export default function VerifyRider() {
                         <p><strong>Created At:</strong> {new Date(selectedRider.createdAt).toLocaleString()}</p>
                         <div>
                             <p><strong>Vehicle Image:</strong></p>
-                            <img src={`http://localhost:9000/${selectedRider.vehicleImage[0]}`} alt="Vehicle" width="100%" />
+                            <img src={`${url}/${selectedRider.vehicleImage[0]}`} alt="Vehicle" width="100%" />
                         </div>
                         <div>
                             <p><strong>RC Book:</strong></p>
                             {selectedRider.rcBookImage.map((img, i) => (
                                 <img 
                                     key={i} 
-                                    src={`http://localhost:9000/${img}`} 
+                                    src={`${url}/${img}`} 
                                     alt={`RC Book ${i + 1}`} 
                                     width="100%" 
                                     style={{ marginBottom: 10 }} 
@@ -110,11 +113,11 @@ export default function VerifyRider() {
                         </div>
                         <div>
                             <p><strong>License:</strong></p>
-                            <img src={`http://localhost:9000/${selectedRider.licenseImage[0]}`} alt="License" width="100%" />
+                            <img src={`${url}/${selectedRider.licenseImage[0]}`} alt="License" width="100%" />
                         </div>
                         <div>
                             <p><strong>Insurance:</strong></p>
-                            <img src={`http://localhost:9000/${selectedRider.insuranceImage[0]}`} alt="Insurance" width="100%" />
+                            <img src={`${url}/${selectedRider.insuranceImage[0]}`} alt="Insurance" width="100%" />
                         </div>
                     </DialogContent>
                     <DialogActions>

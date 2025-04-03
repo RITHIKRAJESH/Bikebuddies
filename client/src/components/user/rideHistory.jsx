@@ -9,9 +9,11 @@ export default function RideHistory() {
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
   useEffect(() => {
+     const url = import.meta.env.VITE_BASE_URL;
+      console.log(url);
     const userid = localStorage.getItem("id");
     axios
-      .get("http://localhost:9000/user/viewmybookings", { headers: { _id: userid } })
+      .get(`${url}/user/viewmybookings`, { headers: { _id: userid } })
       .then((res) => {
         console.log(res.data);
         setBooking(res.data);
@@ -20,12 +22,13 @@ export default function RideHistory() {
         console.log(err);
       });
   }, []);
-
+ const url = import.meta.env.VITE_BASE_URL;
+  console.log(url);
   const handleCancelBooking = (rideId, status) => {
     if (status === "Confirmed") {
       alert("Cancelling a confirmed booking may cause issues with your future bookings.");
       axios
-        .put("http://localhost:9000/rider/updateStatus", { status: status, id: rideId })
+        .put(`${url}/rider/updateStatus`, { status: status, id: rideId })
         .then((res) => {
           console.log(res.data);
         })
@@ -35,7 +38,7 @@ export default function RideHistory() {
     } else {
       alert("Booking cancelled successfully!");
       axios
-        .put("http://localhost:9000/rider/updateStatus", { status: status, id: rideId })
+        .put(`${url}/rider/updateStatus`, { status: status, id: rideId })
         .then((res) => {
           console.log(res.data);
         })
@@ -57,7 +60,7 @@ export default function RideHistory() {
     }
    console.log(selectedRideId)
     axios
-      .post("http://localhost:9000/user/addReview", { bookid: selectedRideId, review, rating })
+      .post(`${url}/user/addReview`, { bookid: selectedRideId, review, rating })
       .then((res) => {
         alert(res.data);
         setShowReviewModal(false);

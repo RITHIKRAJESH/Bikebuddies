@@ -40,14 +40,15 @@ export default function ViewVehicles() {
 
   useEffect(() => {
     const userid = localStorage.getItem("id");
-
+    const url = import.meta.env.VITE_BASE_URL;
+    console.log(url);
     if (!userid) {
       console.log("No user ID found in localStorage");
       return;
     }
 
     axios
-      .get("http://localhost:9000/rider/viewvehicle", { headers: { "_id": userid } })
+      .get(`${url}/rider/viewvehicle`, { headers: { "_id": userid } })
       .then((res) => {
         setVehicle(res.data);
         console.log(res.data);
@@ -61,11 +62,13 @@ export default function ViewVehicles() {
     navigate("/rider/addvehicle");
   };
 
+  const url = import.meta.env.VITE_BASE_URL;
+  console.log(url);
   const handleDelete = (vehicleId) => {
     const confirmed = window.confirm("Are you sure you want to delete this vehicle?");
     if (confirmed) {
       axios
-        .delete(`http://localhost:9000/rider/deleteVehicle/`,{headers:{id:vehicleId}})
+        .delete(`${url}/rider/deleteVehicle/`,{headers:{id:vehicleId}})
         .then(() => {
           alert("Vehicle Deleted Successfully")
           // Remove the deleted vehicle from state
@@ -118,7 +121,7 @@ export default function ViewVehicles() {
     }
 
     axios
-      .put(`http://localhost:9000/rider/updatevehicle`, formData, {
+      .put(`${url}/rider/updatevehicle`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           id:selectedVehicle._id
@@ -161,7 +164,7 @@ export default function ViewVehicles() {
                       <CardMedia
                         component="img"
                         height="180"
-                        image={`http://localhost:9000/${vehicle.vehicleImage[0]}`}
+                        image={`${url}/${vehicle.vehicleImage[0]}`}
                         alt="Vehicle Image"
                       />
                     )}
@@ -189,7 +192,7 @@ export default function ViewVehicles() {
                             vehicle.rcBookImage.map((img, index) => (
                               <img
                                 key={index}
-                                src={`http://localhost:9000/${img}`}
+                                src={`${url}/${img}`}
                                 alt="RC Book"
                                 style={{ width: "100%", borderRadius: 8, marginBottom: 10 }}
                               />
@@ -207,7 +210,7 @@ export default function ViewVehicles() {
                         <AccordionDetails>
                           {vehicle?.insuranceImage?.length > 0 ? (
                             <img
-                              src={`http://localhost:9000/${vehicle.insuranceImage[0]}`}
+                              src={`${url}/${vehicle.insuranceImage[0]}`}
                               alt="Insurance"
                               style={{ width: "100%", borderRadius: 8 }}
                             />
@@ -224,7 +227,7 @@ export default function ViewVehicles() {
                         <AccordionDetails>
                           {vehicle?.licenseImage?.length > 0 ? (
                             <img
-                              src={`http://localhost:9000/${vehicle.licenseImage[0]}`}
+                              src={`${url}/${vehicle.licenseImage[0]}`}
                               alt="License"
                               style={{ width: "100%", borderRadius: 8 }}
                             />

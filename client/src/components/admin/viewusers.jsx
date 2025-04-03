@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AXIOS from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography } from '@mui/material';
 
@@ -6,15 +6,18 @@ export default function ViewUsers() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        AXIOS.get('http://localhost:9000/admin/viewusers')
+        const url = import.meta.env.VITE_BASE_URL;
+        console.log(url);
+        AXIOS.get(`${url}/admin/viewusers`)
             .then(res => {
                 setUsers(res.data);
             })
             .catch(err => console.log(err));
     }, []);
-
+    const url = import.meta.env.VITE_BASE_URL;
+    console.log(url);
     const deleteUser = (id) => {    
-        AXIOS.delete(`http://localhost:9000/admin/deleteuser/${id}`)
+        AXIOS.delete(`${url}/admin/deleteuser/${id}`)
             .then(res => {
                 alert(res.data);
                 setUsers(prevUsers => prevUsers.filter(u => u._id !== id));

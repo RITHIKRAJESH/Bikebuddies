@@ -22,7 +22,9 @@ export default function Viewreviews() {
   });
 
   useEffect(() => {
-    axios.get("http://localhost:9000/admin/viewreviews")
+    const url = import.meta.env.VITE_BASE_URL;
+    console.log(url);
+    axios.get(`${url}/admin/viewreviews`)
       .then((res) => {
         const reviewsData = res.data;
         setReviews(reviewsData);
@@ -49,10 +51,11 @@ export default function Viewreviews() {
         console.log(err);
       });
   }, []);
-
+  const url = import.meta.env.VITE_BASE_URL;
+  console.log(url);
   const handleReviewClick = (id) => {
     console.log(id)
-    axios.put("http://localhost:9000/admin/review",{},{headers:{id:id}})
+    axios.put(`${url}/admin/review`,{},{headers:{id:id}})
     .then((res)=>{
       alert(res.data)
     }).catch((err)=>{

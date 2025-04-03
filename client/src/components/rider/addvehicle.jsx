@@ -25,7 +25,8 @@ export default function Addvehicle() {
   
   const navigate=useNavigate()
   const userId =localStorage.getItem("id");
-
+   const url = import.meta.env.VITE_BASE_URL;
+    console.log(url);
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -40,8 +41,8 @@ export default function Addvehicle() {
     insuranceImage.forEach((file) => formData.append("insuranceImage", file));
     licenseImage.forEach((file) => formData.append("licenseImage", file));
     vehicleImage.forEach((file) => formData.append("vehicleImage", file));
-
-    AXIOS.post("http://localhost:9000/rider/addvehicle", formData, {
+    
+    AXIOS.post(`${url}/rider/addvehicle`, formData, {
       headers: { id: userId, "Content-Type": "multipart/form-data" },
     })
       .then((res) => {

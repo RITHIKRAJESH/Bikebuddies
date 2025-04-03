@@ -250,7 +250,7 @@ import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "./navbar";
 
-const apiKey = "eSOtS524rC0uHYXXQVgjxQzdrVaXyK-Zf9tAZqQTnkc"; // Replace with your API Key
+const apiKey = "qPjHt0idSwMAJrNMUnHtOuHixS6eVLfSsSOuSRSIu4g"; // Replace with your API Key
 
 export default function RiderViewBookings() {
   const [booking, setBooking] = useState([]);
@@ -261,9 +261,11 @@ export default function RiderViewBookings() {
   const mapInstance = useRef(null);
 
   useEffect(() => {
+     const url = import.meta.env.VITE_BASE_URL;
+      console.log(url);
     const userid = localStorage.getItem("id");
     axios
-      .get("http://localhost:9000/rider/viewrides", { headers: { _id: userid } })
+      .get(`${url}/rider/viewrides`, { headers: { _id: userid } })
       .then((res) => {
         setBooking(res.data);
       })
@@ -369,11 +371,12 @@ export default function RiderViewBookings() {
     mapInstance.current.addObject(routePolyline);
     mapInstance.current.getViewModel().setLookAtData({ bounds: routePolyline.getBoundingBox() });
   };
-
+  const url = import.meta.env.VITE_BASE_URL;
+  console.log(url);
   const handleAction = (id, action) => {
     console.log(`Booking ID: ${id}, Status: ${action}`);
     axios
-      .put("http://localhost:9000/rider/updateStatus", { status: action, id: id })
+      .put(`${url}/rider/updateStatus`, { status: action, id: id })
       .then((res) => {
         console.log(res.data);
         // Update the status in the UI immediately

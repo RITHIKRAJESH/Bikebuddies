@@ -6,9 +6,11 @@ export default function CompletedRides() {
   const [booking, setBooking] = useState([]);
 
   useEffect(() => {
+    const url = import.meta.env.VITE_BASE_URL;
+    console.log(url);
     const userid = localStorage.getItem("id");
     axios
-      .get("http://localhost:9000/rider/viewrides", { headers: { _id: userid } })
+      .get(`${url}/rider/viewrides`, { headers: { _id: userid } })
       .then((res) => {
         console.log(res.data);
         setBooking(res.data);

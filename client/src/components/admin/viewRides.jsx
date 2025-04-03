@@ -13,8 +13,10 @@ export default function ViewRides() {
   });
 
   useEffect(() => {
+    const url = import.meta.env.VITE_BASE_URL;
+    console.log(url);
     axios
-      .get("http://localhost:9000/admin/viewrides")
+      .get(`${url}/admin/viewrides`)
       .then((res) => {
         calculateStats(res.data);
       })

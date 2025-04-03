@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Typography, Button, Menu, MenuItem } from "@mui/materi
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ export default function Navbar() {
           <MenuItem onClick={() => { handleClose(); navigate('/rider/completedrides'); }}>Completed Rides</MenuItem>
         </Menu>
         <Button color="inherit" onClick={() => { handleClose(); navigate('/rider/viewrating');}}>Rating</Button>
+        <Button color="inherit" onClick={() => navigate('/rider/profile')}>Profile</Button>
         <Button color="inherit" onClick={() => {navigate('/')
           localStorage.clear()
         }}>Logout</Button>

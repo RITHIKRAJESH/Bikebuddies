@@ -11,7 +11,9 @@ export default function ViewRating() {
 
   useEffect(() => {
     // Fetch reviews from the server
-    axios.get("http://localhost:9000/rider/viewrating", { headers: { id: userid } })
+    const url = import.meta.env.VITE_BASE_URL;
+    console.log(url);
+    axios.get(`${url}/rider/viewrating`, { headers: { id: userid } })
       .then((res) => {
         console.log(res.data);
         setReviews(res.data); // Store the fetched reviews

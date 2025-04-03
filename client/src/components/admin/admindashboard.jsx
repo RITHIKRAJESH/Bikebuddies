@@ -13,6 +13,7 @@ import ViewUsers from "./viewusers";
 import VerifyRider from "./verifyrider";
 import ViewRides from "./viewRides";
 import Viewreviews from "./viewreviews";
+import Fetchmessage from "./fetchmessage";
 // import ViewRides from "./viewRides";
 
 const sidebarWidth = 240;
@@ -23,9 +24,10 @@ const AdminDashboard = () => {
   const [count, setCount] = useState({ users: 0, riders: 0, bikes: 0, bookings: 0 }); // ✅ Added `bookings`
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:900px)");
-
+  const url = import.meta.env.VITE_BASE_URL;
+  console.log(url);
   useEffect(() => {
-    Axios.get("http://localhost:9000/admin/viewCount")
+    Axios.get(`${url}/admin/viewCount`)
       .then((res) => setCount({ ...count, ...res.data })) // ✅ Ensured safe merging
       .catch((err) => console.error("Error fetching count:", err));
   }, []);
@@ -56,6 +58,10 @@ const AdminDashboard = () => {
         <ListItemIcon><FaCalendarAlt color="white" /></ListItemIcon>
         <ListItemText primary={`Reviews`} />
       </ListItem>
+      <ListItem button onClick={() => navigate("/admin/fetchMessage")}>
+        <ListItemIcon><FaCalendarAlt color="white" /></ListItemIcon>
+        <ListItemText primary={`Messages`} />
+      </ListItem>
       <ListItem button onClick={() => navigate("/")}>
         <ListItemIcon><AiOutlineLogout color="white" /></ListItemIcon>
         <ListItemText primary="Logout" />
@@ -68,14 +74,14 @@ const AdminDashboard = () => {
       <CssBaseline />
 
       {/* Top Navbar */}
-      <AppBar position="fixed" sx={{ width: `calc(100% - ${isMobile ? 0 : sidebarWidth}px)`, ml: `${isMobile ? 0 : sidebarWidth}px`, backgroundColor: "#FF9800" }}>
+      <AppBar position="fixed" sx={{ width: `calc(100% - ${isMobile ? 0 : sidebarWidth}px)`, ml: `${isMobile ? 0 : sidebarWidth}px`,   background:'linear-gradient(135deg, #ff7043 5%, #1e1e1e 100%)' }}>
         <Toolbar>
           {isMobile && (
             <IconButton color="inherit" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" sx={{ flexGrow: 1 }} >
             Admin Dashboard
           </Typography>
           <IconButton color="inherit" onClick={() => navigate("/")}>
@@ -95,7 +101,7 @@ const AdminDashboard = () => {
           "& .MuiDrawer-paper": {
             width: sidebarWidth,
             boxSizing: "border-box",
-            backgroundColor: "#212121",
+            background:'linear-gradient(135deg, #ff7043 5%, #1e1e1e 100%)',
             color: "white",
           },
         }}
@@ -105,7 +111,7 @@ const AdminDashboard = () => {
       </Drawer>
 
       {/* Main Content */}
-      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }} >
         {/* Counts Display */}
         <Grid container spacing={3} sx={{ mb: 3 }}>
           <Grid item xs={12} sm={4}>
@@ -133,6 +139,7 @@ const AdminDashboard = () => {
           <Route path="/verifyrider" element={<VerifyRider filter={filter} setFilter={setFilter} />} />
           <Route path="/bookings" element={<ViewRides />} /> 
           <Route path="/viewreview" element={<Viewreviews/>}/>
+          <Route path="/fetchMessage" element={<Fetchmessage/>}/>
         </Routes>
         <Outlet />
       </Box>

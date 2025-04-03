@@ -257,7 +257,7 @@ const RegisterPage = () => {
 
     const [fullnameError, setFullnameError] = useState('');
     const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
+    // const [passwordError, setPasswordError] = useState('');
 
     const navigate = useNavigate();
 
@@ -286,7 +286,7 @@ const RegisterPage = () => {
         // Reset previous errors
         setFullnameError('');
         setEmailError('');
-        setPasswordError('');
+        // setPasswordError('');
         setOtpError('');
         setError(null);
 
@@ -307,13 +307,13 @@ const RegisterPage = () => {
         }
 
         // Password validation
-        if (!password) {
-            setPasswordError('Password is required.');
-            valid = false;
-        } else if (password.length < 6) {
-            setPasswordError('Password must be at least 6 characters long.');
-            valid = false;
-        }
+        // if (!password) {
+        //     setPasswordError('Password is required.');
+        //     valid = false;
+        // } else if (password.length < 6) {
+        //     setPasswordError('Password must be at least 6 characters long.');
+        //     valid = false;
+        // }
 
         if (!valid) return; // Stop submission if validation fails
 
@@ -373,11 +373,12 @@ const RegisterPage = () => {
     };
 
     return (
+        <div style={{background: 'linear-gradient(135deg, #1e1e1e 30%, #ff7043 100%)'}}>
         <Container>
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
                 <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
                     <FormContainer whileHover={{ scale: 1.02 }}>
-                        <Typography variant="h5" textAlign="center" mb={2} fontWeight={600}>Register</Typography>
+                        <Typography variant="h5" textAlign="center" mb={2} fontWeight={600} style={{color:"#513be0"}}>We Welcome You!</Typography>
 
                         {/* Full Name Field */}
                         <TextField
@@ -405,7 +406,7 @@ const RegisterPage = () => {
                         />
 
                         {/* Password Field */}
-                        <TextField
+                        {/* <TextField
                             fullWidth
                             label="Password"
                             margin="normal"
@@ -415,7 +416,7 @@ const RegisterPage = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             error={!!passwordError}
                             helperText={passwordError}
-                        />
+                        /> */}
 
                         {/* Role Toggle */}
                         <ToggleButtonGroup
@@ -494,13 +495,11 @@ const RegisterPage = () => {
                             </Button>
                         </motion.div>
 
-                        <Typography variant="body2" textAlign="center" mt={2}>
-                            Already have an account? <Button variant="text" href="/login">Login</Button>
-                        </Typography>
                     </FormContainer>
                 </motion.div>
             </Box>
         </Container>
+        </div>
     );
 };
 

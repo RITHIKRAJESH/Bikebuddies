@@ -3,7 +3,7 @@ const vehicleModel=require('../models/bikemodel')
 const riderModel=require('../models/bookride')
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-
+const contact=require('../models/contact')
 const viewUsers=async(req,res)=>{
     try{
         const users=await userModel.find({role:'user'});
@@ -92,4 +92,15 @@ const update=async(req,res)=>{
     }
 }
 
-module.exports={viewUsers,viewRiders,verifyRider,deleteUser,countDetails,viewRides,viewReviews,update};
+const fetchMessage = async (req, res) => {
+    try {
+        const messages = await contact.find({});
+        console.log("Messages:", messages);
+        res.json(messages);
+    } catch (err) {
+        console.error("Error fetching messages:", err);
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+}
+
+module.exports={viewUsers,viewRiders,verifyRider,deleteUser,countDetails,viewRides,viewReviews,update,fetchMessage};
