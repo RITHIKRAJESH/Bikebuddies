@@ -97,14 +97,14 @@ export default function VerifyRider() {
                         <p><strong>Created At:</strong> {new Date(selectedRider.createdAt).toLocaleString()}</p>
                         <div>
                             <p><strong>Vehicle Image:</strong></p>
-                            <img src={`${url}/${selectedRider.vehicleImage[0]}`} alt="Vehicle" width="100%" />
+                            <img src={`${selectedRider.vehicleImage[0]}`} alt="Vehicle" width="100%" />
                         </div>
                         <div>
                             <p><strong>RC Book:</strong></p>
                             {selectedRider.rcBookImage.map((img, i) => (
                                 <img 
                                     key={i} 
-                                    src={`${url}/${img}`} 
+                                    src={`${img}`} 
                                     alt={`RC Book ${i + 1}`} 
                                     width="100%" 
                                     style={{ marginBottom: 10 }} 
@@ -113,11 +113,11 @@ export default function VerifyRider() {
                         </div>
                         <div>
                             <p><strong>License:</strong></p>
-                            <img src={`${url}/${selectedRider.licenseImage[0]}`} alt="License" width="100%" />
+                            <img src={`${selectedRider.licenseImage[0]}`} alt="License" width="100%" />
                         </div>
                         <div>
                             <p><strong>Insurance:</strong></p>
-                            <img src={`${url}/${selectedRider.insuranceImage[0]}`} alt="Insurance" width="100%" />
+                            <img src={`${selectedRider.insuranceImage[0]}`} alt="Insurance" width="100%" />
                         </div>
                     </DialogContent>
                     <DialogActions>
