@@ -258,7 +258,7 @@ const RegisterPage = () => {
     const [fullnameError, setFullnameError] = useState('');
     const [emailError, setEmailError] = useState('');
     // const [passwordError, setPasswordError] = useState('');
-
+    const url = import.meta.env.VITE_BASE_URL;
     const navigate = useNavigate();
 
     // Start a timer for OTP expiration
@@ -318,10 +318,10 @@ const RegisterPage = () => {
         if (!valid) return; // Stop submission if validation fails
 
         const payload = { email, password, role, fullname };
-        const url = 'http://localhost:9000/user/register';
+        const url1 = `${url}/user/register1`;
 
         try {
-            const res = await axios.post(url, payload);
+            const res = await axios.post(url1, payload);
             alert(res.data.message);
 
             if (!res.data.error) {
@@ -352,7 +352,7 @@ const RegisterPage = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:9000/user/verify-otp', { email, otp });
+            const response = await axios.post(`${url}/user/verify-otp`, { email, otp });
             alert(response.data.message);
             navigate('/login');
         } catch (error) {
@@ -363,7 +363,7 @@ const RegisterPage = () => {
     const handleResendOtp = async () => {
         const email = localStorage.getItem('email');
         try {
-            const response = await axios.post('http://localhost:9000/user/resend-otp', { email });
+            const response = await axios.post(`${url}/user/resend-otp`, { email });
             alert(response.data.message);
             setRemainingTime(60); // Reset the timer to 60 seconds
             setIsOtpSent(true); // OTP sent again

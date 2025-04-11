@@ -164,7 +164,7 @@ const LoginPage = () => {
     const [otpError, setOtpError] = useState('');
     const [isOtpSent, setIsOtpSent] = useState(false); // State to toggle between email and OTP input
     const navigate = useNavigate();
-
+    const url = import.meta.env.VITE_BASE_URL;
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -182,7 +182,7 @@ const LoginPage = () => {
 
             // Send OTP to the email
             try {
-                const res = await axios.post('http://localhost:9000/user/login', { email });
+                const res = await axios.post(`${url}/user/login`, { email });
                 console.log(res.data);
                 if (res.data) {
                     setIsOtpSent(true);
@@ -203,7 +203,7 @@ const LoginPage = () => {
             }
 
             try {
-                const res = await axios.post('http://localhost:9000/user/verify-otplogin', { email, otp });
+                const res = await axios.post(`${url}/user/verify-otplogin`, { email, otp });
                 if (res.data) {
                     console.log(res.data);
                     localStorage.setItem("id", res.data.user._id);
