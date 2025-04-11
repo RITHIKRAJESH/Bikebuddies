@@ -15,9 +15,9 @@ const path = require('path');
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: "products", // Change this to your desired folder in Cloudinary
+        folder: "vehicles", 
         allowedFormats: ["jpg", "jpeg", "png", "gif"],
-        public_id: (req, file) => `${Date.now()}-${file.originalname}`, // Unique filename
+        public_id: (req, file) => `${Date.now()}-${file.originalname}`, 
     },
 });
 
