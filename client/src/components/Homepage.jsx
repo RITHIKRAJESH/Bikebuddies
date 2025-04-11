@@ -314,7 +314,7 @@ import { AppBar, Toolbar, Button, Container, Box, Typography, Grid, Avatar, Text
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import axios from 'axios';
-import ReactStars from 'react-stars';
+import ReactStars from 'react-rating-stars-component';
 import model from '../assets/model.glb';
 import logo from '../assets/bikebuddieslogo1.png';
 import aboutImage from '../assets/hero-london.webp';
@@ -361,7 +361,7 @@ const HomePage = () => {
   const [otpError, setOtpError] = useState('');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [error, setError] = useState(null);
-  
+  const [mobileOpen,setMobileOpen]=useState(null)
   const url = import.meta.env.VITE_BASE_URL;
   console.log(url);
 
