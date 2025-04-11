@@ -320,6 +320,7 @@ import logo from '../assets/bikebuddieslogo1.png';
 import aboutImage from '../assets/hero-london.webp';
 import { useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu'
 const navbarStyles = {
   backgroundColor: 'transparent',
   boxShadow: 'none',
@@ -454,7 +455,7 @@ const HomePage = () => {
           <img src={logo} alt="Logo" style={{ width: "50px", height: "50px",borderRadius:"50%"}} />     
            {isMobile ? (
             <IconButton color="inherit" edge="end" onClick={handleDrawerToggle} sx={{ ml: 'auto' }}>
-              <MenuIcon />
+              {/* <MenuIcon /> */}
             </IconButton>
           ) : (
             <Box ml="auto">
