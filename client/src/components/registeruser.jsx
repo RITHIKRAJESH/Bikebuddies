@@ -259,6 +259,7 @@ const RegisterPage = () => {
     const [emailError, setEmailError] = useState('');
     // const [passwordError, setPasswordError] = useState('');
     const url = import.meta.env.VITE_BASE_URL;
+    console.log(url)
     const navigate = useNavigate();
 
     // Start a timer for OTP expiration
@@ -318,7 +319,7 @@ const RegisterPage = () => {
         if (!valid) return; // Stop submission if validation fails
 
         const payload = { email, password, role, fullname };
-        const url1 = `${url}/user/register1`;
+        const url1 = `${url}/user/register`;
 
         try {
             const res = await axios.post(url1, payload);
