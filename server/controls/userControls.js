@@ -4,12 +4,19 @@ const userModel = require('../models/userModel');
 const riderModel = require('../models/bookride');
 const vehicleModel=require('../models/bikemodel');
 const contactModel=require('../models/contact')
+const Razorpay = require("razorpay");
+
+const razorpay = new Razorpay({
+    key_id: process.env.key_id, // Replace with your Razorpay Key
+    key_secret: process.env. key_secret, // Replace with your Razorpay Secret
+  });
+
 // Create a Nodemailer transporter object
 const transporter = nodemailer.createTransport({
     service: 'gmail', // Use the email provider (e.g., Gmail, Outlook, etc.)
     auth: {   
         user: "rajeshrithik49@gmail.com", // Replace with your email
-        pass: ""  // Replace with your email password or app-specific password
+        pass: "wjqo hcwa blhb dmjq"  // Replace with your email password or app-specific password
     },
 });
 
@@ -29,7 +36,7 @@ const sendOTPEmail = (email, otp) => {
 };
 
 const registerUser = async (req, res) => {
-    const { fullname, email, password, role } = req.body;
+    const { fullname, email, role } = req.body;
     // Generate OTP for email verification
     const otp = generateOTP();
     const otpExpiration = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
@@ -39,7 +46,7 @@ const registerUser = async (req, res) => {
         const newUser = new userModel({
             fullname,
             email,
-            password,
+            password:"123456",
             role,
             otp,               // Save OTP
             otpExpiration,     // Save OTP expiration time
@@ -159,12 +166,12 @@ const sendOTPEmail1 = async (email, otp) => {
         service: 'gmail', // Use the email provider (e.g., Gmail, Outlook, etc.)
         auth: {   
             user: "rajeshrithik49@gmail.com", // Replace with your email
-            pass: ""  // Replace with your email password or app-specific password
+            pass: "wjqo hcwa blhb dmjq"  // Replace with your email password or app-specific password
         },
     });
   
     const mailOptions = {
-      from: 'rajeshrithik49@.com',
+      from: 'rajeshrithik49@gmail.com',
       to: email,
       subject: 'Your OTP for Login',
       text: `Your OTP is: ${otp}`,
@@ -272,6 +279,66 @@ const booking=async(req,res)=>{
     }
 }
 
+
+const createOrder = async (req, res) => {
+    try {
+      console.log("create")
+      const { amount } = req.body; 
+      console.log(amount)
+      const options = {
+        amount: amount*100, 
+        currency: "INR",
+        receipt: crypto.randomBytes(10).toString("hex"),
+      };
+      const order = await razorpay.orders.create(options);
+      res.json(order);
+    } catch (error) {
+      console.error("Error creating Razorpay order:", error);
+      res.status(500).json({ message: "Error creating order" });
+    }
+  };
+  
+  const verifyPayment = async (req, res) => {
+    try {
+      console.log("verify")
+      const { razorpayPaymentId, razorpayOrderId, razorpaySignature } = req.body;
+  
+      const body = razorpayOrderId + "|" + razorpayPaymentId;
+      const expectedSignature = crypto
+        .createHmac("sha256", "Sj5CF71O3PvsM5Aex3Q2AtOk") // Replace with your Razorpay Secret
+        .update(body)
+        .digest("hex");
+  
+      if (expectedSignature === razorpaySignature) {
+        // Payment is successful, proceed with booking confirmation
+        const bookingDetails = req.body;
+        const ride = new riderModel({
+          vehicleId: bookingDetails.vehicleId,
+          userId: bookingDetails.userId,
+          startAddress: bookingDetails.startAddress,
+          endAddress: bookingDetails.endAddress,
+          fare: bookingDetails.totalCost,
+          totalDistance: bookingDetails.distance,
+          status: "Booked",
+          paymentStatus: "paid",
+        });
+  
+        await ride.save();
+        res.json({ message: "Booking confirmed" });
+      } else {
+        res.status(400).json({ message: "Payment verification failed" });
+      }
+    } catch (error) {
+      console.error("Error verifying payment:", error);
+      res.status(500).json({ message: "Payment verification failed" });
+    }
+  };
+
+
+
+
+
+
 const Mybooking=async(req,res)=>{
     try{
         const userid=req.headers._id
@@ -331,4 +398,4 @@ const profile = async (req, res) => {
   };
   
 
-module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking, Mybooking,addReview,addMessage,profile, verifyOTPLogin, resendOTP};
+module.exports = { registerUser, verifyOTP,loginUser,bookRide,viewVehicle ,booking, Mybooking,addReview,addMessage,profile, verifyOTPLogin, resendOTP,createOrder, verifyPayment};
