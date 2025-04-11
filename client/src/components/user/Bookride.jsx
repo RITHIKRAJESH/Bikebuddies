@@ -672,140 +672,160 @@ const BookRide = () => {
         .catch((err) => console.log(err));
     }
   };
-
+  const getCurrentLocation = async () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser');
+      return;
+    }
+  
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+  
+        const url = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${latitude},${longitude}&lang=en-US&apikey=${apiKey}`;
+  
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+  
+          if (data.items && data.items.length > 0) {
+            const address = data.items[0].address.label;
+            setStartAddress(address); // 📍 Update your input field or state
+          } else {
+            alert('No address found for your location.');
+          }
+        } catch (error) {
+          console.error('HERE Reverse Geocoding error:', error);
+          alert('Failed to retrieve address using HERE Maps.');
+        }
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        alert('Could not get your location.');
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    );
+  };
+  
   return (
     <>
       <UserNav />
-      <div className="body" style={{marginTop:"50px"}}>
-        <div className="p-8">
-          <h1 className="text-xl font-bold mb-4">Book Your Ride</h1>
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Enter Starting Location"
-              value={startAddress}
-              onChange={(e) => setStartAddress(e.target.value)}
-              className="border p-2 rounded w-full mb-2"
-            />
-            <input
-              type="text"
-              placeholder="Enter Destination Location"
-              value={endAddress}
-              onChange={(e) => setEndAddress(e.target.value)}
-              className="border p-2 rounded w-full mb-2"
-            />
-            <button
-              onClick={getDistanceAndRoute}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Get Distance & Route
-            </button>
-          </div>
-          {distance && <p className="text-lg font-semibold mt-6">Distance: {distance}</p>}
-          <p className="text-lg font-semibold mt-6">Total Price: ₹{totalPrice.toFixed(2)}</p>
+      <div className="body">
+  <div className="container">
+    <h1>Book Your Ride</h1>
 
-          {/* Map container */}
-          <div
-            ref={mapRef}
-            style={{
-              width: "100%",
-              height: "400px",
-              borderRadius: "8px",
-              marginTop: "20px",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-            }}
-          ></div>
+    {/* Location Inputs */}
+    <div className="mb-4">
+      <input
+        type="text"
+        placeholder="Enter Starting Location"
+        value={startAddress}
+        onChange={(e) => setStartAddress(e.target.value)}
+      />
+      <button onClick={getCurrentLocation} className="mt-2">
+        Use Current Location
+      </button>
 
-          {/* Riders List */}
-          <div className="p-10">
-            <h1 className="text-xl font-bold mb-4">Select Available Vehicles</h1>
+      <input
+        type="text"
+        placeholder="Enter Destination Location"
+        value={endAddress}
+        onChange={(e) => setEndAddress(e.target.value)}
+      />
+      <button onClick={getDistanceAndRoute} className="mt-2">
+        Get Distance & Route
+      </button>
+    </div>
 
-            {riders.length > 0 ? (
-              <div>
-                {/* Dropdown for selecting a rider */}
-                <select className="custom-select border p-2 rounded w-full mb-2" onChange={handleRiderSelection} defaultValue="">
-                  <option value="" disabled>Select a rider</option>
-                  {riders.map((rider, index) => (
-                    <option key={index} value={rider.vehicleName}>
-                      {rider.vehicleName} ({rider.model})
-                    </option>
-                  ))}
-                </select>
+    {/* Distance and Price */}
+    {distance && (
+      <p className="distance-info">Distance: {distance}</p>
+    )}
+    <p className="price-info">Total Price: ₹{totalPrice.toFixed(2)}</p>
 
-                {/* Show selected rider details */}
-                {selectedRider && (
-                  <div className="mt-6 p-6 border rounded-lg shadow-md bg-white">
-                    <div className="flex items-center">
-                      <FaBicycle className="text-3xl text-blue-500 mr-3" />
-                      <div className="flex flex-col">
-                        <p className="font-semibold">{selectedRider.vehicleName}</p>
-                        <p className="text-sm text-gray-500">{selectedRider.model}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p>No riders available.</p>
-            )}
+    {/* Map Display */}
+    <div
+      ref={mapRef}
+      style={{
+        width: "100%",
+        height: "400px",
+        borderRadius: "12px",
+        marginTop: "20px",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    ></div>
 
-            {/* Payment Method Options */}
-            <div className="mt-6">
-              <h2 className="font-semibold mb-2">Payment Method</h2>
-              <label>
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="paylater"
-                  checked={paymentMethod === "paylater"}
-                  onChange={() => setPaymentMethod("paylater")}
-                />
-                Pay Later
-              </label>
-              <label className="ml-4">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="paid"
-                  checked={paymentMethod === "paid"}
-                  onChange={() => setPaymentMethod("paid")}
-                />
-                Online Payment
-              </label>
+    {/* Rider Selection */}
+    <div className="mt-10">
+      <h1>Select Available Vehicles</h1>
 
-              {/* {paymentMethod === "paid" && (
-                <div className="mt-4">
-                  <h3>Enter Bank Details</h3>
-                  <input
-                    type="text"
-                    placeholder="Account Number"
-                    value={bankDetails.accountNumber}
-                    onChange={(e) =>
-                      setBankDetails({ ...bankDetails, accountNumber: e.target.value })
-                    }
-                    className="border p-2 rounded w-full mb-2"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Bank Name"
-                    value={bankDetails.bankName}
-                    onChange={(e) => setBankDetails({ ...bankDetails, bankName: e.target.value })}
-                    className="border p-2 rounded w-full"
-                  />
+      {riders.length > 0 ? (
+        <>
+          <select onChange={handleRiderSelection} defaultValue="">
+            <option value="" disabled>Select a rider</option>
+            {riders.map((rider, index) => (
+              <option key={index} value={rider.vehicleName}>
+                {rider.vehicleName} ({rider.model})
+              </option>
+            ))}
+          </select>
+
+          {selectedRider && (
+            <div className="rider-card mt-6">
+              <div className="flex items-center">
+                <FaBicycle className="text-3xl text-blue-500 mr-3" />
+                <div>
+                  <p className="font-semibold">{selectedRider.vehicleName}</p>
+                  <p className="text-sm text-gray-500">{selectedRider.model}</p>
                 </div>
-              )} */}
+              </div>
             </div>
+          )}
+        </>
+      ) : (
+        <p>No riders available.</p>
+      )}
+    </div>
 
-            <button
-              onClick={handleBooking}
-              className="bg-green-500 text-white px-4 py-2 rounded mt-6"
-            >
-              Book Ride
-            </button>
-          </div>
-        </div>
+    {/* Payment Method */}
+    <div className="payment-method">
+      <h2 className="payment-title">Payment Method</h2>
+      <div className="radio-group">
+        <label className="radio-option">
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="paylater"
+            checked={paymentMethod === "paylater"}
+            onChange={() => setPaymentMethod("paylater")}
+          />
+          <span>Pay Later</span>
+        </label>
+        <label className="radio-option">
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="paid"
+            checked={paymentMethod === "paid"}
+            onChange={() => setPaymentMethod("paid")}
+          />
+          <span>Online Payment</span>
+        </label>
       </div>
+    </div>
+
+    {/* Booking Button */}
+    <button onClick={handleBooking} className="book-btn mt-6">
+      Book Ride
+    </button>
+  </div>
+</div>
+
     </>
   );
 };
