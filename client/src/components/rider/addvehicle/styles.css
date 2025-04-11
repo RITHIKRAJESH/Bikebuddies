@@ -1,0 +1,120 @@
+/* === Layout and Spacing === */
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .mt-6 {
+    margin-top: 1.5rem;
+  }
+  
+  .px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .p-4 {
+    padding: 1rem;
+  }
+  
+  /* === Card === */
+  .card {
+    max-width: 700px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* === Typography === */
+  .title {
+    font-size: 1.875rem; /* Tailwind: text-3xl */
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+    color: #6b7280; /* Tailwind: text-gray-500 */
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.25rem; /* Tailwind: text-xl */
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* === Form Inputs === */
+  .input-field {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db; /* Tailwind: border-gray-300 */
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .input-field:focus {
+    border-color: #3b82f6; /* Tailwind: blue-500 */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    outline: none;
+  }
+  
+  /* === File Upload Button === */
+  .file-upload-btn {
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem;
+    border: 2px dashed #d1d5db;
+    border-radius: 0.5rem;
+    background-color: #f9fafb;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s;
+  }
+  
+  .file-upload-btn:hover {
+    background-color: #f3f4f6;
+    border-color: #3b82f6;
+  }
+  
+  /* === Submit Button === */
+  .submit-btn {
+    width: 100%;
+    background-color: #3b82f6;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s, transform 0.2s;
+    cursor: pointer;
+  }
+  
+  .submit-btn:hover {
+    background-color: #2563eb;
+    transform: scale(1.02);
+  }
+  
+  /* === Grid Utilities === */
+  .grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 768px) {
+    .grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+  

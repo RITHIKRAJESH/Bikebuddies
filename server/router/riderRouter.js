@@ -1,17 +1,26 @@
 const express = require('express');
 const riderRouter = express.Router();
 const { addVehicle,viewVehicle, viewRides, updateStatus, deleteVehicle, updateVehicle, riderDashboard, viewRating} = require('../controls/riderControl');
+const { v2: cloudinary } = require("cloudinary");
+require('dotenv').config();
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key:    process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+  });
 
 const multer = require('multer');
 const path = require('path');
-const storage=multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,'uploads/')
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "products", // Change this to your desired folder in Cloudinary
+        allowedFormats: ["jpg", "jpeg", "png", "gif"],
+        public_id: (req, file) => `${Date.now()}-${file.originalname}`, // Unique filename
     },
-    filename:(req,file,cb)=>{
-        cb(null,Date.now()+path.extname(file.originalname))
-    }
-})
+});
+
 const upload = multer({ storage: storage });
 
 

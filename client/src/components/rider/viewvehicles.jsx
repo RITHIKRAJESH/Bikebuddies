@@ -164,7 +164,7 @@ export default function ViewVehicles() {
                       <CardMedia
                         component="img"
                         height="180"
-                        image={`${url}/${vehicle.vehicleImage[0]}`}
+                        image={`${vehicle.vehicleImage[0]}`}
                         alt="Vehicle Image"
                       />
                     )}
@@ -192,7 +192,7 @@ export default function ViewVehicles() {
                             vehicle.rcBookImage.map((img, index) => (
                               <img
                                 key={index}
-                                src={`${url}/${img}`}
+                                src={`${img}`}
                                 alt="RC Book"
                                 style={{ width: "100%", borderRadius: 8, marginBottom: 10 }}
                               />
@@ -210,7 +210,7 @@ export default function ViewVehicles() {
                         <AccordionDetails>
                           {vehicle?.insuranceImage?.length > 0 ? (
                             <img
-                              src={`${url}/${vehicle.insuranceImage[0]}`}
+                              src={`${vehicle.insuranceImage[0]}`}
                               alt="Insurance"
                               style={{ width: "100%", borderRadius: 8 }}
                             />
@@ -227,7 +227,7 @@ export default function ViewVehicles() {
                         <AccordionDetails>
                           {vehicle?.licenseImage?.length > 0 ? (
                             <img
-                              src={`${url}/${vehicle.licenseImage[0]}`}
+                              src={`${vehicle.licenseImage[0]}`}
                               alt="License"
                               style={{ width: "100%", borderRadius: 8 }}
                             />

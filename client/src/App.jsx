@@ -14,7 +14,7 @@ const BookRide = lazy(() => import("./components/user/Bookride"));
 const RideHistory = lazy(() => import("./components/user/rideHistory"));
 const Riderhome = lazy(() => import("./components/rider/Riderhome"));
 const Viewvehicles = lazy(() => import("./components/rider/viewvehicles"));
-const Addvehicle = lazy(() => import("./components/rider/addvehicle"));
+const Addvehicle = lazy(() => import("./components/rider/addvehicle/addvehicle"));
 const RiderViewbookings = lazy(() => import("./components/rider/viewbookings"));
 const AdminDashboard = lazy(() => import("./components/admin/admindashboard"));
 const Profile=lazy(()=> import("./components/user/profile"))
