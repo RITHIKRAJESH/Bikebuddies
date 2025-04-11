@@ -309,15 +309,13 @@
 // };
 
 // export default HomePage;
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Button, Container, Box, Typography, Grid, Avatar, TextField, IconButton, Modal } from '@mui/material';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import axios from 'axios';
 import ReactStars from 'react-stars';
-import slider1 from '../assets/motor1.webp';
 import model from '../assets/model.glb';
-import LoginPopup from './Loginpage';
 import logo from '../assets/bikebuddieslogo1.png';
 import aboutImage from '../assets/hero-london.webp';
 import { useMediaQuery } from '@mui/material';
