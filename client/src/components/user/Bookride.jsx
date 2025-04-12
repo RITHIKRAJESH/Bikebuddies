@@ -472,6 +472,7 @@ const BookRide = () => {
         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-service.js");
         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-ui.js");
         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-mapevents.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-ui.css")
         await loadRazorpayScript();
         
         if (window.H && !mapInstance.current) {
