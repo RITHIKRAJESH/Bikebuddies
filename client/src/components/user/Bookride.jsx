@@ -461,7 +461,7 @@ const BookRide = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const platformRef = useRef(null);
-  const apiKey = "qPjHt0idSwMAJrNMUnHtOuHixS6eVLfSsSOuSRSIu4g";
+  const apiKey = "wpFgNmLnc0ofLe3z81lzHRhTr8zwCDnAGPG4q9HaICY";
   
   useEffect(() => {
      const url = import.meta.env.VITE_BASE_URL;
