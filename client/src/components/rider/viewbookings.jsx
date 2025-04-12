@@ -72,9 +72,12 @@ export default function RiderViewBookings() {
       zoom: 9,
     });
 
+    map.addLayer(defaultLayers.vector.normal.traffic);
+    if (defaultLayers.vector.normal.landmarks) {
+      map.addLayer(defaultLayers.vector.normal.landmarks);
+    }
     new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
     window.H.ui.UI.createDefault(map, defaultLayers);
-
     window.addEventListener("resize", () => map.getViewPort().resize());
     mapInstance.current = map;
 
