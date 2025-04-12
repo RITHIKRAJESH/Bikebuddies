@@ -461,7 +461,7 @@ const BookRide = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const platformRef = useRef(null);
-  const apiKey = "qPjHt0idSwMAJrNMUnHtOuHixS6eVLfSsSOuSRSIu4g";
+  const apiKey = "wpFgNmLnc0ofLe3z81lzHRhTr8zwCDnAGPG4q9HaICY";
   
   useEffect(() => {
      const url = import.meta.env.VITE_BASE_URL;
@@ -528,25 +528,31 @@ const BookRide = () => {
     }
   
     platformRef.current = new window.H.service.Platform({ apikey: apiKey });
+  
     const defaultLayers = platformRef.current.createDefaultLayers({
-      lg: "en", // Language
-      pois: true, // Enable Points of Interest
-      tileSize: 512, // Higher resolution tiles
-      ppi: 320, // Pixels per inch
+      lg: "en",      // Language
+      pois: true,    // Points of Interest
+      tileSize: 512, // High-res tiles
+      ppi: 320,      // Pixels per inch
     });
-    const map = new window.H.Map(mapRef.current, defaultLayers.vector.normal.map, {
-      center: { lat: 10.1632, lng: 76.6413 }, // Kerala, India
+  
+    // ✅ Use raster instead of vector for more compatibility
+    const map = new window.H.Map(mapRef.current, defaultLayers.raster.normal.map, {
+      center: { lat: 10.1632, lng: 76.6413 },
       zoom: 9,
     });
-    map.addLayer(defaultLayers.vector.normal.traffic);
-    if (defaultLayers.vector.normal.landmarks) {
-      map.addLayer(defaultLayers.vector.normal.landmarks);
-    }
+  
+    // You can also test without traffic and landmark layers first
+    // map.addLayer(defaultLayers.raster.normal.traffic); // Optional, if available
+  
     new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
     window.H.ui.UI.createDefault(map, defaultLayers);
+  
     window.addEventListener("resize", () => map.getViewPort().resize());
+  
     mapInstance.current = map;
   };
+  
   
 
   const getDistanceAndRoute = async () => {
