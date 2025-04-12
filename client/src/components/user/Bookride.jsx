@@ -449,6 +449,7 @@ import UserNav from "./usernav";
 import axios from "axios";
 import './bookride.css'
 import logo from '../../assets/bikebuddieslogo1.png'
+import { useNavigate } from "react-router-dom";
 const BookRide = () => {
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
@@ -586,17 +587,36 @@ const BookRide = () => {
       setDistance("Error retrieving distance.");
     }
   };
-
+  const navigate=useNavigate()
   const displayRoute = (encodedPolyline) => {
     if (!mapInstance.current || !platformRef.current) return;
 
-    const lineString = window.H.geo.LineString.fromFlexiblePolyline(encodedPolyline);
-    const routePolyline = new window.H.map.Polyline(lineString, {
-      style: { strokeColor: "blue", lineWidth: 5 },
-    });
+  // Decode polyline
+  const lineString = window.H.geo.LineString.fromFlexiblePolyline(encodedPolyline);
+  const routePolyline = new window.H.map.Polyline(lineString, {
+    style: { strokeColor: "blue", lineWidth: 5 },
+  });
 
-    mapInstance.current.addObject(routePolyline);
-    mapInstance.current.getViewModel().setLookAtData({ bounds: routePolyline.getBoundingBox() });
+  // Add polyline to map
+  mapInstance.current.addObject(routePolyline);
+
+  // Set map view to route
+  mapInstance.current.getViewModel().setLookAtData({ bounds: routePolyline.getBoundingBox() });
+
+  // Extract start and end coordinates from the LineString
+  const startCoord = lineString.extractPoint(0); // First point
+  const endCoord = lineString.extractPoint(lineString.getPointCount() - 1); // Last point
+
+  // Create markers
+  const startMarker = new window.H.map.Marker(startCoord);
+  const endMarker = new window.H.map.Marker(endCoord);
+
+  // Optional: Customize marker icons if you want
+  // startMarker.setIcon(new window.H.map.Icon('start-icon.png'));
+  // endMarker.setIcon(new window.H.map.Icon('end-icon.png'));
+
+  // Add markers to map
+  mapInstance.current.addObjects([startMarker, endMarker]);
   };
 
   const totalPrice = parseFloat(distance) * 8 || 0;
@@ -646,7 +666,9 @@ const BookRide = () => {
             // Send payment details to backend to confirm the booking
             axios
               .post(`${url}/user/bookride`, bookingDetails)
-              .then((res) => alert(res.data))
+              .then((res) => {alert(res.data)
+                navigate("/user/history")
+              })
               .catch((err) => console.log(err));
           },
           prefill: {
@@ -668,7 +690,9 @@ const BookRide = () => {
       // If user selects 'Pay Later', proceed with booking
       axios
         .post(`${url}/user/bookride`, bookingDetails)
-        .then((res) => alert(res.data))
+        .then((res) => {alert(res.data)
+              navigate("/user/history")
+        })
         .catch((err) => console.log(err));
     }
   };
