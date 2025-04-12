@@ -56,48 +56,6 @@ export default function Profile() {
             </Col>
           </Row>
         )}
-
-        {/* Ride History Cards */}
-        {rides && rides.length > 0 ? (
-          <Row>
-            {rides.map((ride, index) => (
-              <Col md={4} key={index}>
-                <Card className="mb-4 custom-card">
-                  <Card.Body>
-                    <Card.Title>Ride #{index + 1}</Card.Title>
-                    <Card.Text>
-                      <strong>Vehicle Number:</strong> {ride.vehicleId?.regNo || 'N/A'}
-                    </Card.Text>
-                    <Card.Text>
-                      <strong>Start Address:</strong> {ride.startAddress}
-                    </Card.Text>
-                    <Card.Text>
-                      <strong>End Address:</strong> {ride.endAddress}
-                    </Card.Text>
-                    <Card.Text>
-                      <strong>Total Distance:</strong> {ride.totalDistance}
-                    </Card.Text>
-                    <Card.Text>
-                      <strong>Fare:</strong> {ride.fare}
-                    </Card.Text>
-                    <Card.Text>
-                      <strong>Rating:</strong> {ride.rating}
-                    </Card.Text>
-                    {/* <Button variant="primary">Leave a Review</Button> */}
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <Row>
-            <Col md={12}>
-              <Card className="text-center mb-4">
-                <Card.Body>No completed rides found.</Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        )}
       </Container>
 
       <style jsx>{`
