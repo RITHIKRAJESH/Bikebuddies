@@ -591,37 +591,35 @@ const BookRide = () => {
   const navigate=useNavigate()
   const displayRoute = (encodedPolyline) => {
     if (!mapInstance.current || !platformRef.current) return;
-  
-    // Decode polyline
-    const lineString = window.H.geo.LineString.fromFlexiblePolyline(encodedPolyline);
-    const routePolyline = new window.H.map.Polyline(lineString, {
-      style: { strokeColor: "blue", lineWidth: 5 },
-    });
-  
-    // Extract start and end coordinates from the LineString
-    const startCoord = lineString.extractPoint(0); // First point
-    const endCoord = lineString.extractPoint(lineString.getPointCount() - 1); // Last point
-  
-    console.log("Start Coord:", startCoord);
-    console.log("End Coord:", endCoord);
-  
-    const startMarker = new window.H.map.Marker(startCoord);
-    const endMarker = new window.H.map.Marker(endCoord);
-  
-    // Add everything to a group to ensure bounding box includes all
-    const group = new window.H.map.Group();
-    group.addObjects([routePolyline, startMarker, endMarker]);
-  
-    // Add to map after slight delay (in case of async rendering issues)
-    setTimeout(() => {
-      mapInstance.current.addObject(group);
-      mapInstance.current.getViewModel().setLookAtData({
-        bounds: group.getBoundingBox(),
-        zoom: 15, // Optional: set default zoom
-      });
-    }, 100); // Small delay to avoid race conditions
+
+  // Decode polyline
+  const lineString = window.H.geo.LineString.fromFlexiblePolyline(encodedPolyline);
+  const routePolyline = new window.H.map.Polyline(lineString, {
+    style: { strokeColor: "blue", lineWidth: 5 },
+  });
+
+  // Add polyline to map
+  mapInstance.current.addObject(routePolyline);
+
+  // Set map view to route
+  mapInstance.current.getViewModel().setLookAtData({ bounds: routePolyline.getBoundingBox() });
+
+  // Extract start and end coordinates from the LineString
+  const startCoord = lineString.extractPoint(0); // First point
+  const endCoord = lineString.extractPoint(lineString.getPointCount() - 1); // Last point
+
+  // Create markers
+  const startMarker = new window.H.map.Marker(startCoord);
+  const endMarker = new window.H.map.Marker(endCoord);
+
+  // Optional: Customize marker icons if you want
+  // startMarker.setIcon(new window.H.map.Icon('start-icon.png'));
+  // endMarker.setIcon(new window.H.map.Icon('end-icon.png'));
+
+  // Add markers to map
+  mapInstance.current.addObjects([startMarker, endMarker]);
   };
-  
+
   const totalPrice = parseFloat(distance) * 8 || 0;
 
   const handleRiderSelection = (event) => {
