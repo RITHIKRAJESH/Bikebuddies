@@ -461,7 +461,7 @@ const BookRide = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const platformRef = useRef(null);
-  const apiKey = "wpFgNmLnc0ofLe3z81lzHRhTr8zwCDnAGPG4q9HaICY";
+  const apiKey = "qPjHt0idSwMAJrNMUnHtOuHixS6eVLfSsSOuSRSIu4g";
   
   useEffect(() => {
      const url = import.meta.env.VITE_BASE_URL;
@@ -472,7 +472,6 @@ const BookRide = () => {
         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-service.js");
         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-ui.js");
         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-mapevents.js");
-        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-ui.css")
         await loadRazorpayScript();
         
         if (window.H && !mapInstance.current) {
@@ -528,31 +527,25 @@ const BookRide = () => {
     }
   
     platformRef.current = new window.H.service.Platform({ apikey: apiKey });
-  
     const defaultLayers = platformRef.current.createDefaultLayers({
-      lg: "en",      // Language
-      pois: true,    // Points of Interest
-      tileSize: 512, // High-res tiles
-      ppi: 320,      // Pixels per inch
+      lg: "en", // Language
+      pois: true, // Enable Points of Interest
+      tileSize: 512, // Higher resolution tiles
+      ppi: 320, // Pixels per inch
     });
-  
-    // ✅ Use raster instead of vector for more compatibility
-    const map = new window.H.Map(mapRef.current, defaultLayers.raster.normal.map, {
-      center: { lat: 10.1632, lng: 76.6413 },
+    const map = new window.H.Map(mapRef.current, defaultLayers.vector.normal.map, {
+      center: { lat: 10.1632, lng: 76.6413 }, // Kerala, India
       zoom: 9,
     });
-  
-    // You can also test without traffic and landmark layers first
-    // map.addLayer(defaultLayers.raster.normal.traffic); // Optional, if available
-  
+    map.addLayer(defaultLayers.vector.normal.traffic);
+    if (defaultLayers.vector.normal.landmarks) {
+      map.addLayer(defaultLayers.vector.normal.landmarks);
+    }
     new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
     window.H.ui.UI.createDefault(map, defaultLayers);
-  
     window.addEventListener("resize", () => map.getViewPort().resize());
-  
     mapInstance.current = map;
   };
-  
   
 
   const getDistanceAndRoute = async () => {
@@ -598,32 +591,13 @@ const BookRide = () => {
   const displayRoute = (encodedPolyline) => {
     if (!mapInstance.current || !platformRef.current) return;
 
-  // Decode polyline
-  const lineString = window.H.geo.LineString.fromFlexiblePolyline(encodedPolyline);
-  const routePolyline = new window.H.map.Polyline(lineString, {
-    style: { strokeColor: "blue", lineWidth: 5 },
-  });
+    const lineString = window.H.geo.LineString.fromFlexiblePolyline(encodedPolyline);
+    const routePolyline = new window.H.map.Polyline(lineString, {
+      style: { strokeColor: "blue", lineWidth: 5 },
+    });
 
-  // Add polyline to map
-  mapInstance.current.addObject(routePolyline);
-
-  // Set map view to route
-  mapInstance.current.getViewModel().setLookAtData({ bounds: routePolyline.getBoundingBox() });
-
-  // Extract start and end coordinates from the LineString
-  const startCoord = lineString.extractPoint(0); // First point
-  const endCoord = lineString.extractPoint(lineString.getPointCount() - 1); // Last point
-
-  // Create markers
-  const startMarker = new window.H.map.Marker(startCoord);
-  const endMarker = new window.H.map.Marker(endCoord);
-
-  // Optional: Customize marker icons if you want
-  // startMarker.setIcon(new window.H.map.Icon('start-icon.png'));
-  // endMarker.setIcon(new window.H.map.Icon('end-icon.png'));
-
-  // Add markers to map
-  mapInstance.current.addObjects([startMarker, endMarker]);
+    mapInstance.current.addObject(routePolyline);
+    mapInstance.current.getViewModel().setLookAtData({ bounds: routePolyline.getBoundingBox() });
   };
 
   const totalPrice = parseFloat(distance) * 8 || 0;
