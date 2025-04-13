@@ -179,29 +179,27 @@ input:focus, select:focus {
   outline: none;
 }
 
-/* Buttons */
-button {
-  padding: 12px;
-  font-size: 1rem;
-  background: linear-gradient(135deg, #4CAF50, #2E7D32);
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
+
+
 
 /* Specialized Buttons */
 .book-btn {
-  background-color: var(--success);
+  background: linear-gradient(135deg, #FF9800, #EF6C00);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
+
 .book-btn:hover {
-  background-color: #218838;
+  background: linear-gradient(135deg, #FB8C00, #E65100);
+  transform: translateY(-2px);
 }
+
 
 /* Header */
 h1 {

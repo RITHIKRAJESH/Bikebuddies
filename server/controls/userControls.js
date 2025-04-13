@@ -248,7 +248,7 @@ const bookRide = async (req, res) => {
 
         // Save the ride to the database
         await newRide.save();
-
+        
         return res.status(200).json({ message: 'Ride booked successfully', ride: newRide });
     } catch (error) {
         console.error('Error booking ride:', error);
@@ -272,8 +272,14 @@ const booking=async(req,res)=>{
         const ride=new riderModel({
             vehicleId,userId,startAddress,endAddress,fare:totalCost,totalDistance:distance,status:"Booked",paymentStatus
         })
+        
         await ride.save()
-        res.json("Confirmed Booking")
+        global._io.emit("Booked", {
+          userId,
+          ride,
+          status: "Booking Successful"
+        });
+        res.json("Booking Successfull")
     }catch(err){
         console.log(err)
     }
@@ -352,7 +358,7 @@ const Mybooking=async(req,res)=>{
 const addReview=async(req,res)=>{
     try{
      const {bookid,review,rating}=req.body
-     await riderModel.findByIdAndUpdate({_id:bookid},{review:review,rating:rating,reviewstatus:"pending"})
+     await riderModel.findByIdAndUpdate({_id:bookid},{review:review,rating:rating,reviewstatus:"completed"})
      res.json("Review Submitted Successfully")
     }catch(err){
         console.log(err)
@@ -384,7 +390,7 @@ const profile = async (req, res) => {
       }
   
       // Fetch completed rides using the appropriate model (assuming it's rideModel, not userModel)
-      const rides = await riderModel.find({ userId: userid, status: "Completed" });
+      const rides = await riderModel.find({ userId: userid, status: "Completed" }).populate("vehicleId");
   
       console.log(user);
       console.log(rides);

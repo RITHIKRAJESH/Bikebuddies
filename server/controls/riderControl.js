@@ -56,6 +56,7 @@ const viewRides = async (req, res) => {
         res.json(userRides);
       } else {
         // If no matching rides, return an empty array
+        
         res.json([]);
       }
     } catch (err) {
@@ -81,6 +82,10 @@ const viewRides = async (req, res) => {
      const booking=await riderModel.findOne({_id:id})
      booking.status=status
      booking.save()
+     global._io.emit("statusUpdated", {
+      rideId: id, // Use consistent naming with frontend
+      status: status,
+    });
      res.json(`The Ride is ${status} successfully`)
     }catch(err){
       console.log(err)

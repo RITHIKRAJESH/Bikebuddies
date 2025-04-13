@@ -47,31 +47,37 @@ export default function ViewRating() {
   return (
     <>
       <Navbar />
-      <div className="container">
-        <Typography variant="h4" gutterBottom>
-          Review Ratings
-        </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell><strong>Review</strong></TableCell>
-                <TableCell>Rating</TableCell>
-                <TableCell><strong>Sentiment</strong></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {reviews.map((review, index) => (
-                <TableRow key={index}>
-                  <TableCell>{review.review}</TableCell>
-                  <TableCell>{review.rating}Star</TableCell>
-                  <TableCell>{getSentimentLabel(sentiments[index])}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+    <div className="container">
+  <Typography variant="h3" gutterBottom textAlign={'center'}>
+    Reviews && Ratings
+  </Typography>
+
+  {reviews.filter((r) => r.reviewstatus === "completed").length === 0? (
+    <Typography variant="body1">No reviews available.</Typography>
+  ) : (
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell><strong>Review</strong></TableCell>
+            <TableCell>Rating</TableCell>
+            <TableCell><strong>Response From Customer</strong></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {reviews.map((review, index) => (
+            <TableRow key={index}>
+              <TableCell>{review.review}</TableCell>
+              <TableCell>{review.rating} Star</TableCell>
+              <TableCell>{getSentimentLabel(sentiments[index])}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  )}
+</div>
+
     </>
   );
 }

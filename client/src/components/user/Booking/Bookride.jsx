@@ -445,10 +445,10 @@
 
 import { useEffect, useState, useRef } from "react";
 import { FaBicycle } from "react-icons/fa";
-import UserNav from "./usernav";
+import UserNav from "../usernav";
 import axios from "axios";
 import './bookride.css'
-import logo from '../../assets/bikebuddieslogo1.png'
+import logo from '../../../assets/bikebuddieslogo1.png'
 import { useNavigate } from "react-router-dom";
 const BookRide = () => {
   const [startAddress, setStartAddress] = useState("");
@@ -731,7 +731,7 @@ const BookRide = () => {
         value={startAddress}
         onChange={(e) => setStartAddress(e.target.value)}
       />
-      <button onClick={getCurrentLocation} className="mt-2">
+      <button onClick={getCurrentLocation} className="mt-2 book-btn">
         Use Current Location
       </button>
 
@@ -741,7 +741,7 @@ const BookRide = () => {
         value={endAddress}
         onChange={(e) => setEndAddress(e.target.value)}
       />
-      <button onClick={getDistanceAndRoute} className="mt-2">
+      <button onClick={getDistanceAndRoute} className="mt-2 book-btn">
         Get Distance & Route
       </button>
     </div>

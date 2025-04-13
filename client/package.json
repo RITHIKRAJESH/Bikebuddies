@@ -38,7 +38,8 @@
     "react-toastify": "^11.0.5",
     "recharts": "^2.15.1",
     "sentiment": "^5.0.2",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

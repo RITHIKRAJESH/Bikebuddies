@@ -10,7 +10,7 @@ import Viewrating from "./components/rider/viewrating";
 const HomePage = lazy(() => import("./components/Homepage"));
 const RegisterPage = lazy(() => import("./components/registeruser"));
 const LoginPage = lazy(() => import("./components/Loginpage"));
-const BookRide = lazy(() => import("./components/user/Bookride"));
+const BookRide = lazy(() => import("./components/user/Booking/Bookride"));
 const RideHistory = lazy(() => import("./components/user/rideHistory"));
 const Riderhome = lazy(() => import("./components/rider/Riderhome"));
 const Viewvehicles = lazy(() => import("./components/rider/viewvehicles"));

@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "./navbar";
-
+import socket from '../socket'
 const apiKey = "wpFgNmLnc0ofLe3z81lzHRhTr8zwCDnAGPG4q9HaICY"; 
 
 export default function RiderViewBookings() {
@@ -12,22 +12,40 @@ export default function RiderViewBookings() {
   const mapRef = useRef(null);
   const platformRef = useRef(null);
   const mapInstance = useRef(null);
-
+  
   useEffect(() => {
-     const url = import.meta.env.VITE_BASE_URL;
-      console.log(url);
+    const url = import.meta.env.VITE_BASE_URL;
     const userid = localStorage.getItem("id");
+  
+    // Fetch rides initially
     axios
       .get(`${url}/rider/viewrides`, { headers: { _id: userid } })
       .then((res) => {
-        setBooking(res.data);
+        setBooking(res.data); // Set the initial booking data
       })
       .catch((err) => console.log(err));
+  
+    socket.on('statusUpdated', (data) => {
+      console.log("Status update received:", data);
+  
+      setBooking((prevBookings) =>
+        prevBookings.map((booking) =>
+          booking._id === data.rideId
+            ? { ...booking, status: data.status }  
+            : booking
+        )
+      );
+    });
+  
+  
+  loadScripts()
+    return () => {
+      socket.off('statusUpdated'); 
+    };
+  }, []); 
+  
 
-    loadScripts();
-  }, []);
-
-  // Load HERE Maps SDK dynamically
+ 
   const loadScripts = async () => {
     try {
       await loadScript("https://js.api.here.com/v3/3.1/mapsjs-core.js");

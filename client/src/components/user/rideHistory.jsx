@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Userhome from "./usernav";
 import axios from "axios";
+import socket from "../socket";
+import { useNavigate } from "react-router-dom";
 
 export default function RideHistory() {
   const [booking, setBooking] = useState([]);
@@ -9,49 +11,68 @@ export default function RideHistory() {
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
   useEffect(() => {
-     const url = import.meta.env.VITE_BASE_URL;
-      console.log(url);
+    const url = import.meta.env.VITE_BASE_URL;
     const userid = localStorage.getItem("id");
+  
+    // Initial fetch
     axios
       .get(`${url}/user/viewmybookings`, { headers: { _id: userid } })
       .then((res) => {
-        console.log(res.data);
         setBooking(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
+  
+    // Listen for real-time updates
+    socket.on("statusUpdated", (data) => {
+      console.log("Received real-time update:", data);
+      
+      // Update the booking status locally
+      setBooking((prevBookings) =>
+        prevBookings.map((booking) =>
+          booking._id === data.rideId
+            ? { ...booking, status: data.status }
+            : booking
+        )
+      );
+    });
+  
+    return () => {
+      socket.off("statusUpdated");
+    };
   }, []);
+  
  const url = import.meta.env.VITE_BASE_URL;
   console.log(url);
   const handleCancelBooking = (rideId, status) => {
-    if (status === "Confirmed") {
-      alert("Cancelling a confirmed booking may cause issues with your future bookings.");
-      axios
-        .put(`${url}/rider/updateStatus`, { status: status, id: rideId })
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      alert("Booking cancelled successfully!");
-      axios
-        .put(`${url}/rider/updateStatus`, { status: status, id: rideId })
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    const newStatus = status === "Confirmed" ? "Cancelled" : status;
+  
+    axios
+      .put(`${url}/rider/updateStatus`, { status: newStatus, id: rideId })
+      .then((res) => {
+        console.log(res.data);
+  
+        // Emit socket event for live updates
+        socket.emit("updateStatus", { rideId, status: newStatus });
+        
+        if (status === "Confirmed") {
+          alert("Cancelling a confirmed booking may cause issues with your future bookings.");
+        } else {
+          alert("Booking cancelled successfully!");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+  
 
   const handleOpenReviewModal = (rideId) => {
     setSelectedRideId(rideId);
     setShowReviewModal(true);
   };
+  const navigate=useNavigate()
 
   const handleSubmitReview = () => {
     if (!review || rating === 0) {
@@ -63,6 +84,7 @@ export default function RideHistory() {
       .post(`${url}/user/addReview`, { bookid: selectedRideId, review, rating })
       .then((res) => {
         alert(res.data);
+        navigate("/user/bookride")
         setShowReviewModal(false);
         setReview("");
         setRating(0);
@@ -117,18 +139,18 @@ export default function RideHistory() {
                     </span>
                   </div>
 
-                  {/* Cancel Button */}
                   {ride.status === "Booked" || ride.status === "Confirmed" ? (
-                    <button onClick={() => handleCancelBooking(ride._id, "Cancelled")} className="btn45">
-                      Cancel Booking
-                    </button>
-                  ) : ride.status === "Completed" ? (
-                    <button onClick={() => handleOpenReviewModal(ride._id)} className="btnReview">
-                      Leave a Review
-                    </button>
-                  ) : (
-                    <button disabled>Cancelled</button>
-                  )}
+  <button onClick={() => handleCancelBooking(ride._id, "Cancelled")} className="btn45">
+    Cancel Booking
+  </button>
+) : ride.status === "Completed" && ride.reviewstatus != "completed" ? (
+  <button onClick={() => handleOpenReviewModal(ride._id)} className="btnReview">
+    Leave a Review
+  </button>
+) : ride.reviewstatus=="completed"?(
+  <h1>Thanks for riding with us 🏍️.</h1>
+ ):<h1>Wishing You a Safe Journey</h1>}
+
                 </div>
               </div>
             ))}
@@ -141,7 +163,7 @@ export default function RideHistory() {
       {showReviewModal && (
         <div className="review-modal-overlay">
           <div className="review-modal">
-            <h3 className="text-2xl font-semibold text-center mb-4">Leave a Review</h3>
+         <h3 className="text-2xl font-semibold text-center mb-4">Leave a Review</h3>
             <textarea
               value={review}
               onChange={(e) => setReview(e.target.value)}
