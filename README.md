@@ -25,7 +25,7 @@
 
 - **Frontend**: React.js
 - **Payment Gateway**: Razorpay Integration
-- **Maps**: Google Maps API or similar
+- **Maps**: HereMaps API or similar
 - **Authentication**: OTP verification system
 - **Hosting**: [Render](https://render.com) 
 
