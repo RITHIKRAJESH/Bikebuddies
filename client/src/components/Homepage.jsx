@@ -527,8 +527,8 @@ const HomePage = () => {
           {postedReviews.length > 0 ? postedReviews.map((review, index) => (
             <Grid item xs={12} sm={6} md={4} key={index} >
               <Box className="testimonial-box" p={3} border={1} borderRadius={2} style={{backgroundColor:"white"}}>
-                <Avatar src={review.profilePic || defaultAvatar} alt={review.username} />
-                <Typography variant="h6">{review.username}</Typography>
+                <Avatar src={review.profilePic || defaultAvatar} alt={review.fullname} />
+                <Typography variant="h6">{review.fullname}</Typography>
                 <ReactStars count={5} value={review.rating} size={24} edit={false} color2={'#ff7043'} />
                 <Typography variant="body2">{review.review}</Typography>
               </Box>
