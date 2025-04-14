@@ -48,6 +48,6 @@ io.on('connection', (socket) => {
   });
 });
 // Start server
-server.listen(process.env.PORT || 9000, () => {
+server.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
