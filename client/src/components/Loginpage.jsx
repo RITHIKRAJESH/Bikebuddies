@@ -145,7 +145,7 @@ import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import { toast, ToastContainer } from 'react-toastify';
 // Styled form container
 const FormContainer = styled(motion.div)({
     maxWidth: '400px',
@@ -186,7 +186,7 @@ const LoginPage = () => {
                 console.log(res.data);
                 if (res.data) {
                     setIsOtpSent(true);
-                    alert("OTP sent to your email address.");
+                   toast.info("OTP sent to your email address.");
                 }
             } catch (error) {
                 setError('Failed to send OTP. Please Check the email id.');
@@ -208,13 +208,13 @@ const LoginPage = () => {
                     console.log(res.data);
                     localStorage.setItem("id", res.data.user._id);
                     if (res.data.user.role === "rider") {
-                        alert("Login successful! Welcome rider.");
+                       toast.success("Login successful! Welcome rider.");
                         navigate("/rider");
                     } else if (res.data.user.role === "user") {
-                        alert("Login successful! Welcome user.");
+                        toast.success("Login successful! Welcome user.");
                         navigate("/user/bookride");
                     } else if (res.data.user.role === "admin") {
-                        alert("Login successful! Welcome admin.");
+                        toast.success("Login successful! Welcome admin.");
                         navigate("/admin");
                     }
                 } else {
@@ -229,6 +229,7 @@ const LoginPage = () => {
 
     return (
         <div style={{background: 'linear-gradient(135deg, #1e1e1e 30%, #ff7043 100%)'}}>
+            <ToastContainer/>
         <Container>
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
                 <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>

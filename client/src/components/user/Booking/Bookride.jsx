@@ -449,6 +449,7 @@ import UserNav from "../usernav";
 import axios from "axios";
 import './bookride.css'
 import logo from '../../../assets/bikebuddieslogo1.png'
+import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 const BookRide = () => {
   const [startAddress, setStartAddress] = useState("");
@@ -550,7 +551,7 @@ const BookRide = () => {
 
   const getDistanceAndRoute = async () => {
     if (!startAddress || !endAddress) {
-      alert("Please enter both start and end locations.");
+       toast.warning("Please enter both start and end locations.");
       return;
     }
 
@@ -610,7 +611,7 @@ const BookRide = () => {
     console.log(url);
   const handleBooking = async () => {
     if (!selectedRider) {
-      alert("Please select a rider before booking.");
+      toast.warning("Please select a rider before booking.");
       return;
     }
 
@@ -643,11 +644,11 @@ const BookRide = () => {
           description: `Booking from ${startAddress} to ${endAddress}`,
           image:{logo}, 
           handler: function (response) {
-            alert("Payment Successful");
+          toast.success("Payment Successful");
             // Send payment details to backend to confirm the booking
             axios
               .post(`${url}/user/bookride`, bookingDetails)
-              .then((res) => {alert(res.data)
+              .then((res) => {toast.success(res.data)
                 navigate("/user/history")
               })
               .catch((err) => console.log(err));
@@ -665,13 +666,13 @@ const BookRide = () => {
         razorpayInstance.open(); // Open Razorpay payment modal
       } catch (error) {
         console.error("Error creating Razorpay order:", error);
-        alert("Error creating payment order.");
+        toast.err("Error creating payment order.");
       }
     } else {
       // If user selects 'Pay Later', proceed with booking
       axios
         .post(`${url}/user/bookride`, bookingDetails)
-        .then((res) => {alert(res.data)
+        .then((res) => {toast.success(res.data)
               navigate("/user/history")
         })
         .catch((err) => console.log(err));
@@ -679,7 +680,7 @@ const BookRide = () => {
   };
   const getCurrentLocation = async () => {
     if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser');
+      toast.warning('Geolocation is not supported by your browser');
       return;
     }
   
@@ -697,16 +698,16 @@ const BookRide = () => {
             const address = data.items[0].address.label;
             setStartAddress(address); // 📍 Update your input field or state
           } else {
-            alert('No address found for your location.');
+            toast.info('No address found for your location.');
           }
         } catch (error) {
           console.error('HERE Reverse Geocoding error:', error);
-          alert('Failed to retrieve address using HERE Maps.');
+          toast.warning('Failed to retrieve address using HERE Maps.');
         }
       },
       (error) => {
         console.error('Geolocation error:', error);
-        alert('Could not get your location.');
+        toast.warning('Could not get your location.');
       },
       {
         enableHighAccuracy: true,
@@ -720,6 +721,7 @@ const BookRide = () => {
     <>
       <UserNav />
       <div className="body">
+        <ToastContainer/>
   <div className="container">
     <h1>Book Your Ride</h1>
 

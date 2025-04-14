@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-
+import { toast, ToastContainer } from 'react-toastify';
 export default function VerifyRider() {
     const [riders, setRiders] = useState([]);
     const [open, setOpen] = useState(false);
@@ -32,7 +32,7 @@ export default function VerifyRider() {
     const verifyUser = (id) => {
         axios.put(`${url}/admin/verifyrider/${id}`)
           .then((res) => {
-            alert(res.data);
+           toast.success(res.data);
             setRiders((prevRiders) =>
               prevRiders.map((r) =>
                 r._id === id ? { ...r, verifieddriver: !r.verifieddriver } : r
@@ -45,7 +45,7 @@ export default function VerifyRider() {
     const deleteUser = (id) => {
         axios.delete(`${url}/admin/deleteuser/${id}`)
           .then((res) => {
-            alert(res.data);
+            toast.error(res.data);
             setRiders((prevRiders) => prevRiders.filter((r) => r._id !== id));
           })
           .catch((err) => console.log(err));

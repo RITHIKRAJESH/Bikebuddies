@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import CompletedRides from "./components/rider/completedRids";
 import Viewrating from "./components/rider/viewrating";
+import 'react-toastify/dist/ReactToastify.css';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Lazy-loaded components

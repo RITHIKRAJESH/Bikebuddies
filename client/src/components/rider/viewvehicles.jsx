@@ -21,6 +21,7 @@ import {
   Input,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function ViewVehicles() {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export default function ViewVehicles() {
       axios
         .delete(`${url}/rider/deleteVehicle/`,{headers:{id:vehicleId}})
         .then(() => {
-          alert("Vehicle Deleted Successfully")
+          toast.error("Vehicle Deleted Successfully")
           // Remove the deleted vehicle from state
           setVehicle(vehicles.filter((vehicle) => vehicle._id !== vehicleId));
         })
@@ -148,6 +149,7 @@ export default function ViewVehicles() {
   return (
     <>
       <Navbar />
+      <ToastContainer/>
       <Container>
         <Typography variant="h4" gutterBottom align="center">
           Vehicle Details

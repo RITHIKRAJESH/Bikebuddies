@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './navbar';
 import axios from 'axios';
-
+import BookingNotification from './notification';
+import socket from '../socket'
+import alertSound from '../../assets/error-beep-1-296491.mp3'
+import { toast, ToastContainer } from 'react-toastify';
 export default function Riderhome() {
   const [record, setRecord] = useState({});
   const userId = localStorage.getItem('id');
@@ -19,8 +22,28 @@ export default function Riderhome() {
         console.log(err);
         // Handle error gracefully, possibly show an error message in the UI
       });
+      socket.on('connect', () => {
+        socket.emit('riderConnected',userId);
+      });
+      const handleBookingEvent = (data) => {
+        console.log(data);
+        if (data.riderId === userId) {
+          console.log(`Booking Successful: ${data.status}`);
+          const alert=new Audio(alertSound)
+          alert.play()
+          toast.info(data.status);
+        }
+      };
+      
+  
+      socket.on('Booked', handleBookingEvent);
+  
+      // Clean up the event listener when the component unmounts
+      return () => {
+        socket.off('Booked', handleBookingEvent);  // Remove event listener
+      };
   }, [userId]);
-
+  
   // Safe parsing for totalKilometers
   let totalKilometers = 0;
   if (record.totalKilometers && typeof record.totalKilometers === 'string') {
@@ -32,9 +55,9 @@ export default function Riderhome() {
   return (
     <>
       <Navbar />
+      <ToastContainer/>
       <div style={styles.container}>
         <h1 style={styles.welcome}>Welcome back, Rider!</h1>
-
         <div style={styles.statsContainer}>
           <div style={styles.statsCard}>
             <h3>Total Rides</h3>

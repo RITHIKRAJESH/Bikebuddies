@@ -3,7 +3,7 @@ import Userhome from "./usernav";
 import axios from "axios";
 import socket from "../socket";
 import { useNavigate } from "react-router-dom";
-
+import { toast, ToastContainer } from 'react-toastify';
 export default function RideHistory() {
   const [booking, setBooking] = useState([]);
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -52,15 +52,16 @@ export default function RideHistory() {
       .put(`${url}/rider/updateStatus`, { status: newStatus, id: rideId })
       .then((res) => {
         console.log(res.data);
-  
+        console.log(status)
+        if (status === "Booked" || status === "Accepted") {
+          toast.warning("Cancelling a confirmed booking may cause issues with your future bookings.");
+        } else {
+          toast("Booking cancelled successfully!");
+        }
         // Emit socket event for live updates
         socket.emit("updateStatus", { rideId, status: newStatus });
         
-        if (status === "Confirmed") {
-          alert("Cancelling a confirmed booking may cause issues with your future bookings.");
-        } else {
-          alert("Booking cancelled successfully!");
-        }
+       
       })
       .catch((err) => {
         console.log(err);
@@ -76,14 +77,14 @@ export default function RideHistory() {
 
   const handleSubmitReview = () => {
     if (!review || rating === 0) {
-      alert("Please provide both a review and a rating.");
+    toast.warning("Please provide both a review and a rating.");
       return;
     }
    console.log(selectedRideId)
     axios
       .post(`${url}/user/addReview`, { bookid: selectedRideId, review, rating })
       .then((res) => {
-        alert(res.data);
+        toast.success(res.data);
         navigate("/user/bookride")
         setShowReviewModal(false);
         setReview("");
@@ -96,69 +97,106 @@ export default function RideHistory() {
     <>
       <Userhome />
       <div className="container mx-auto p-6 mt-12">
+        <ToastContainer/>
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Your Ride History</h2>
 
-        {booking.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {booking.map((ride, index) => (
-              <div
-                key={index}
-                className="relative bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all"
-              >
-                {/* Booking Header */}
-                <div className="absolute top-0 left-0 right-0 px-4 py-2 bg-blue-600 text-white rounded-t-lg text-center font-semibold">
-                  Booking #{index + 1}
-                </div>
-
-                {/* Ride Details */}
-                <div className="mt-10">
-                  <div className="mb-3">
-                    <p className="text-lg font-semibold text-gray-700">🚖 Vehicle Number: <span className="text-blue-500">{ride.vehicleId?.regNo || "N/A"}</span></p>
-                  </div>
-
-                  <div className="mb-3">
-                    <p className="text-md font-semibold text-gray-600">📍 Start: <span className="text-gray-800">{ride.startAddress}</span></p>
-                    <p className="text-md font-semibold text-gray-600">📍 End: <span className="text-gray-800">{ride.endAddress}</span></p>
-                  </div>
-
-                  <div className="mb-3">
-                    <p className="text-md font-semibold text-gray-600">🚗 Distance: <span className="text-gray-800">{ride.totalDistance}</span></p>
-                    <p className="text-md font-semibold text-gray-600">💵 Amount: <span className="text-gray-800">{ride.fare}</span></p>
-                    <p className="text-md font-semibold text-gray-600">💵 Payment Status: <span className="text-gray-800">{ride.paymentStatus}</span></p>
-                  </div>
-
-                  <div className="mb-3">
-                    <p className="text-sm text-gray-500">📅 Date: <span className="font-medium text-gray-800">{new Date(ride.createdAt).toLocaleDateString()}</span></p>
-                  </div>
-
-                  {/* Status Indicator */}
-                  <div className="text-sm font-semibold">
-                    🚦 Status:{" "}
-                    <span className={`px-3 py-1  text-black ${ride.status === "Confirmed" ? "bg-green-500" : ride.status === "Pending" ? "bg-yellow-500" : "bg-white-500"}`}>
-                      {ride.status}
-                    </span>
-                  </div>
-
-                  {ride.status === "Booked" || ride.status === "Confirmed" ? (
-  <button onClick={() => handleCancelBooking(ride._id, "Cancelled")} className="btn45">
-    Cancel Booking
-  </button>
-) : ride.status === "Completed" && ride.reviewstatus != "completed" ? (
-  <button onClick={() => handleOpenReviewModal(ride._id)} className="btnReview">
-    Leave a Review
-  </button>
-) : ride.reviewstatus=="completed"?(
-  <h1>Thanks for riding with us 🏍️.</h1>
- ):<h1>Wishing You a Safe Journey</h1>}
-
-                </div>
-              </div>
-            ))}
+        {booking.filter((ride) => ride.status !== "Cancelled").length > 0 ? (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {booking
+      .filter((ride) => ride.status !== "Cancelled")
+      .map((ride, index) => (
+        <div
+          key={index}
+          className="relative bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all"
+        >
+          {/* Booking Header */}
+          <div className="absolute top-0 left-0 right-0 px-4 py-2 bg-blue-600 text-white rounded-t-lg text-center font-semibold">
+            Booking #{index + 1}
           </div>
-        ) : (
-          <p className="text-center text-gray-600 text-lg">No bookings found.</p>
-        )}
-      </div>
+
+          {/* Ride Details */}
+          <div className="mt-10">
+            <div className="mb-3">
+              <p className="text-lg font-semibold text-gray-700">
+                🚖 Vehicle Number:{" "}
+                <span className="text-blue-500">{ride.vehicleId?.regNo || "N/A"}</span>
+              </p>
+            </div>
+
+            <div className="mb-3">
+              <p className="text-md font-semibold text-gray-600">
+                📍 Start: <span className="text-gray-800">{ride.startAddress}</span>
+              </p>
+              <p className="text-md font-semibold text-gray-600">
+                📍 End: <span className="text-gray-800">{ride.endAddress}</span>
+              </p>
+            </div>
+
+            <div className="mb-3">
+              <p className="text-md font-semibold text-gray-600">
+                🚗 Distance: <span className="text-gray-800">{ride.totalDistance}</span>
+              </p>
+              <p className="text-md font-semibold text-gray-600">
+                💵 Amount: <span className="text-gray-800">{ride.fare}</span>
+              </p>
+              <p className="text-md font-semibold text-gray-600">
+                💵 Payment Status:{" "}
+                <span className="text-gray-800">{ride.paymentStatus}</span>
+              </p>
+            </div>
+
+            <div className="mb-3">
+              <p className="text-sm text-gray-500">
+                📅 Date:{" "}
+                <span className="font-medium text-gray-800">
+                  {new Date(ride.createdAt).toLocaleDateString()}
+                </span>
+              </p>
+            </div>
+
+            {/* Status Indicator */}
+            <div className="text-sm font-semibold">
+              🚦 Status:{" "}
+              <span
+                className={`px-3 py-1 text-black ${
+                  ride.status === "Confirmed"
+                    ? "bg-green-500"
+                    : ride.status === "Pending"
+                    ? "bg-yellow-500"
+                    : "bg-white-500"
+                }`}
+              >
+                {ride.status}
+              </span>
+            </div>
+
+            {ride.status === "Booked" || ride.status === "Accepted" ? (
+              <button
+                onClick={() => handleCancelBooking(ride._id, "Cancelled")}
+                className="btn45"
+              >
+                Cancel Booking
+              </button>
+            ) : ride.status === "Completed" && ride.reviewstatus !== "completed" ? (
+              <button
+                onClick={() => handleOpenReviewModal(ride._id)}
+                className="btnReview"
+              >
+                Leave a Review
+              </button>
+            ) : ride.reviewstatus === "completed" ? (
+              <h1>Thanks for riding with us 🏍️.</h1>
+            ) : (
+              <h1>Wishing You a Safe Journey</h1>
+            )}
+          </div>
+        </div>
+      ))}
+  </div>
+) : (
+  <p className="text-center text-gray-600 text-lg">No bookings found.</p>
+)}
+</div>
 
       {showReviewModal && (
         <div className="review-modal-overlay">

@@ -321,6 +321,7 @@ import aboutImage from '../assets/hero-london.webp';
 import { useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu'
+import { toast, ToastContainer } from 'react-toastify';
 const navbarStyles = {
   backgroundColor: 'transparent',
   boxShadow: 'none',
@@ -401,8 +402,8 @@ const HomePage = () => {
     e.preventDefault();
     if (!validateForm()) return;
     axios.post(`${url}/user/contact`, contact)
-      .then((res) => alert(res.data))
-      .catch(() => alert("Error submitting form."));
+      .then((res) => toast.success(res.data))
+      .catch(() => toast.error("Error submitting form."));
   };
 
   const handleLogin = async () => {
@@ -420,7 +421,7 @@ const HomePage = () => {
       try {
         await axios.post(`${url}/user/login`, { email });
         setIsOtpSent(true);
-        alert('OTP sent to your email.');
+        toast.info('OTP sent to your email.');
       } catch (error) {
         setError('Failed to send OTP. Please try again later.');
       }
@@ -433,7 +434,7 @@ const HomePage = () => {
       try {
         const res = await axios.post(`${url}/user/verify-otplogin`, { email, otp });
         localStorage.setItem("id", res.data.user._id);
-        alert("Login successful!");
+        toast.success("Login successful!");
         navigate(res.data.user.role === "rider" ? "/rider" : res.data.user.role === "user" ? "/user/bookride" : "/admin");
       } catch (error) {
         setError('Invalid OTP. Please try again.');
@@ -450,6 +451,7 @@ const HomePage = () => {
   };
   return (
     <div style={{background:'linear-gradient(135deg, #1e1e1e 30%, #ff7043 100%)'}}>
+      <ToastContainer/>
       <AppBar position="fixed" sx={navbarStyles}>
       <Toolbar>
           <img src={logo} alt="Logo" style={{ width: "50px", height: "50px",borderRadius:"50%"}} />     

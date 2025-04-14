@@ -23,7 +23,7 @@ app.use('/rider', riderRouter);
 
 const adminRouter = require('./router/adminRouter');
 app.use('/admin', adminRouter);
-
+const { addSocketForUser, removeSocketBySocketId } = require('./socketmanager'); 
 // Create HTTP server and initialize Socket.IO
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -36,18 +36,18 @@ global._io = io
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
 
-  // Listen for incoming events
-  socket.on('updateStatus', (data) => {
-    console.log('Status update received:', data);
-    io.emit('statusUpdated', data); // Broadcast to all clients
+  socket.on('riderConnected', (userId) => {
+    addSocketForUser(userId, socket.id); 
+    console.log(userId)
+    console.log(`Rider ${userId} connected with socket ID: ${socket.id}`);
   });
 
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
+    removeSocketBySocketId(socket.id); 
   });
 });
-
 // Start server
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT || 9000, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });

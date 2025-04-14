@@ -5,6 +5,8 @@ const riderModel = require('../models/bookride');
 const vehicleModel=require('../models/bikemodel');
 const contactModel=require('../models/contact')
 const Razorpay = require("razorpay");
+const { getSocketIdForUser } = require('../socketmanager');
+
 
 const razorpay = new Razorpay({
     key_id: process.env.key_id, // Replace with your Razorpay Key
@@ -266,24 +268,40 @@ const viewVehicle=async(req,res)=>{
     }
 }
 
-const booking=async(req,res)=>{
-    try{
-        const {vehicleId, userId, startAddress, endAddress,totalCost,distance,paymentStatus}=req.body
-        const ride=new riderModel({
-            vehicleId,userId,startAddress,endAddress,fare:totalCost,totalDistance:distance,status:"Booked",paymentStatus
-        })
-        
-        await ride.save()
-        global._io.emit("Booked", {
-          userId,
-          ride,
-          status: "Booking Successful"
-        });
-        res.json("Booking Successfull")
-    }catch(err){
-        console.log(err)
+const booking = async (req, res) => {
+  try {
+    const { vehicleId, userId, startAddress, endAddress, totalCost, distance, paymentStatus } = req.body;
+    
+    const ride = new riderModel({
+      vehicleId, userId, startAddress, endAddress, fare: totalCost, totalDistance: distance, status: "Booked", paymentStatus
+    });
+
+    const vehicle = await vehicleModel.findOne({ _id: vehicleId });
+    const riderId = vehicle.userId;
+    console.log(riderId)
+    await ride.save();
+    
+
+    const riderSocketId = getSocketIdForUser(riderId);
+    console.log("Socket id",riderSocketId)
+    if (riderId) {
+      global._io.to(riderSocketId).emit("Booked", {
+        riderId,
+        ride,
+        status: "New Booking Assigned"
+      });
+    } else {
+      console.log("Rider is not connected via WebSocket");
+     
     }
-}
+
+  
+    res.json("Booking Successful" );
+  } catch (err) {
+    console.error("Error in booking:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 
 const createOrder = async (req, res) => {

@@ -13,7 +13,7 @@ import {
 import AXIOS from "axios";
 import { useNavigate } from "react-router-dom";
 import './styles.css';
-
+import { toast, ToastContainer } from 'react-toastify';
 export default function Addvehicle() {
   const [vehicleName, setVehicleName] = useState("");
   const [model, setModel] = useState("");
@@ -47,7 +47,7 @@ export default function Addvehicle() {
       headers: { id: userId, "Content-Type": "multipart/form-data" },
     })
       .then((res) => {
-        alert(res.data.message);
+        toast.success(res.data.message);
         navigate("/rider/viewvehicle")
       })
       .catch((err) => {
@@ -62,6 +62,7 @@ export default function Addvehicle() {
 
   return (
     <div className="flex-center mt-6 px-2">
+      <ToastContainer/>
     <div className="card p-4">
       <h1 className="title">Vehicle Registration</h1>
       <p className="subtitle">Register your vehicle by filling out the details below.</p>

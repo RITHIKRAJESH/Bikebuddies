@@ -3,6 +3,8 @@ import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "./navbar";
 import socket from '../socket'
+import BookingNotification from "./notification";
+import { toast, ToastContainer } from "react-toastify";
 const apiKey = "wpFgNmLnc0ofLe3z81lzHRhTr8zwCDnAGPG4q9HaICY"; 
 
 export default function RiderViewBookings() {
@@ -12,7 +14,7 @@ export default function RiderViewBookings() {
   const mapRef = useRef(null);
   const platformRef = useRef(null);
   const mapInstance = useRef(null);
-  
+  const userid = localStorage.getItem("id");
   useEffect(() => {
     const url = import.meta.env.VITE_BASE_URL;
     const userid = localStorage.getItem("id");
@@ -27,7 +29,9 @@ export default function RiderViewBookings() {
   
     socket.on('statusUpdated', (data) => {
       console.log("Status update received:", data);
-  
+     if(data.status == "Cancelled"){
+       toast.info("Booking Was Cancelled By the User")
+     }
       setBooking((prevBookings) =>
         prevBookings.map((booking) =>
           booking._id === data.rideId
@@ -166,6 +170,8 @@ export default function RiderViewBookings() {
   return (
     <>
       <Navbar />
+      <BookingNotification userId={userid}/>
+      <ToastContainer/>
       <div className="container">
         <h2 className="heading">My Ride Bookings</h2>
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography } from '@mui/material';
 import Sentiment from 'sentiment';
-
+import { toast, ToastContainer } from 'react-toastify';
 // Initialize sentiment analysis
 const sentiment = new Sentiment();
 
@@ -57,7 +57,7 @@ export default function Viewreviews() {
     console.log(id)
     axios.put(`${url}/admin/review`,{},{headers:{id:id}})
     .then((res)=>{
-      alert(res.data)
+     toast.info(res.data)
     }).catch((err)=>{
       console.log(err)
     })
@@ -68,7 +68,7 @@ export default function Viewreviews() {
       <Typography variant="h4" align="center" gutterBottom>
         Reviews
       </Typography>
-
+     <ToastContainer/>
       {/* Display Bad Reviews */}
       <Typography variant="h6" gutterBottom>
         Bad Reviews ({reviewCategories.bad.length})

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import AXIOS from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography } from '@mui/material';
-
+import { toast, ToastContainer } from 'react-toastify';
 export default function ViewUsers() {
     const [users, setUsers] = useState([]);
 
@@ -19,7 +19,7 @@ export default function ViewUsers() {
     const deleteUser = (id) => {    
         AXIOS.delete(`${url}/admin/deleteuser/${id}`)
             .then(res => {
-                alert(res.data);
+                toast.error(res.data);
                 setUsers(prevUsers => prevUsers.filter(u => u._id !== id));
             })
             .catch(err => console.log(err));
@@ -28,6 +28,7 @@ export default function ViewUsers() {
     return (
         <>
             <Typography variant="h4" gutterBottom>View Users</Typography>
+            <ToastContainer/>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>

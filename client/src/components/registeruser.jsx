@@ -234,7 +234,7 @@ import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import { toast, ToastContainer } from 'react-toastify';
 const FormContainer = styled(motion.div)({
     maxWidth: '400px',
     margin: 'auto',
@@ -323,7 +323,7 @@ const RegisterPage = () => {
 
         try {
             const res = await axios.post(url1, payload);
-            alert(res.data.message);
+            toast.success(res.data.message);
 
             if (!res.data.error) {
                 setIsOtpSent(true); // OTP sent after successful registration
@@ -354,10 +354,10 @@ const RegisterPage = () => {
 
         try {
             const response = await axios.post(`${url}/user/verify-otp`, { email, otp });
-            alert(response.data.message);
+             toast.success(response.data.message);
             navigate('/login');
         } catch (error) {
-            alert(error.response?.data?.message || 'OTP verification failed!');
+            toast.success(error.response?.data?.message || 'OTP verification failed!');
         }
     };
 
@@ -365,16 +365,17 @@ const RegisterPage = () => {
         const email = localStorage.getItem('email');
         try {
             const response = await axios.post(`${url}/user/resend-otp`, { email });
-            alert(response.data.message);
+            toast.success(response.data.message);
             setRemainingTime(60); // Reset the timer to 60 seconds
             setIsOtpSent(true); // OTP sent again
         } catch (error) {
-            alert(error.response?.data?.message || 'Failed to resend OTP!');
+            toast.error(error.response?.data?.message || 'Failed to resend OTP!');
         }
     };
 
     return (
         <div style={{background: 'linear-gradient(135deg, #1e1e1e 30%, #ff7043 100%)'}}>
+            <ToastContainer/>
         <Container>
             <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
                 <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
