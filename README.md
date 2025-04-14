@@ -9,7 +9,9 @@
 - 🔐 **Secure Payments** with [Razorpay](https://razorpay.com/)
 - 🔄 **OTP Verification** for rider authentication
 - 🗺️ **Map Integration** for real-time route tracking
+- 📡 Real-time Updates with Socket.IO for seamless communication
 - 🛵 Easy bike booking in just a few taps
+
 
 ---
 
