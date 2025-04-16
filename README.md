@@ -9,7 +9,9 @@
 - 🔐 **Secure Payments** with [Razorpay](https://razorpay.com/)
 - 🔄 **OTP Verification** for rider authentication
 - 🗺️ **Map Integration** for real-time route tracking
+- 📡 Real-time Updates with Socket.IO for seamless communication
 - 🛵 Easy bike booking in just a few taps
+
 
 ---
 
@@ -23,7 +25,7 @@
 
 - **Frontend**: React.js
 - **Payment Gateway**: Razorpay Integration
-- **Maps**: Google Maps API or similar
+- **Maps**: HereMaps API or similar
 - **Authentication**: OTP verification system
 - **Hosting**: [Render](https://render.com) 
 
