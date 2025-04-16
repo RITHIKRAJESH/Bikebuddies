@@ -23,6 +23,7 @@ app.use('/rider', riderRouter);
 
 const adminRouter = require('./router/adminRouter');
 app.use('/admin', adminRouter);
+
 const { addSocketForUser, removeSocketBySocketId } = require('./socketmanager'); 
 // Create HTTP server and initialize Socket.IO
 const server = http.createServer(app);

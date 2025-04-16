@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast} from 'react-toastify';
 export default function VerifyRider() {
     const [riders, setRiders] = useState([]);
     const [open, setOpen] = useState(false);
@@ -13,6 +13,7 @@ export default function VerifyRider() {
         axios.get(`${url}/admin/viewriders`)
             .then((res) => {
                 setRiders(res.data);
+                console.log(res.data)
             }).catch((err) => {
                 console.log(err);
             });

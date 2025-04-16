@@ -324,7 +324,8 @@ const RegisterPage = () => {
         try {
             const res = await axios.post(url1, payload);
             toast.success(res.data.message);
-
+            localStorage.setItem("role",res.data.user.role)
+            localStorage.setItem("id", res.data.user._id);
             if (!res.data.error) {
                 setIsOtpSent(true); // OTP sent after successful registration
                 setRemainingTime(60); // Reset the timer to 60 seconds
@@ -355,7 +356,13 @@ const RegisterPage = () => {
         try {
             const response = await axios.post(`${url}/user/verify-otp`, { email, otp });
              toast.success(response.data.message);
-            navigate('/login');
+             const role=localStorage.getItem("role")
+             if (role === "rider") {
+                toast.success("Login successful! Welcome rider.");
+                 navigate("/rider");
+             } else if(role === "user"){
+                 toast.success("Login successful! Welcome user.");
+             }
         } catch (error) {
             toast.success(error.response?.data?.message || 'OTP verification failed!');
         }

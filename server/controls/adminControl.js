@@ -81,16 +81,25 @@ const viewReviews=async(req,res)=>{
     }
 }
 
-const update=async(req,res)=>{
-    try{
-        const id=req.headers.id
-        console.log(id)
-        await riderModel.findByIdAndUpdate({_id:id},{reviewstatus:"posted"})
-        res.json("Posted Successfully")
-    }catch(err){
-        res.status(500).json({ message: "Server error", err });
+const update = async (req, res) => {
+    try {
+      const id = req.headers.id;
+      console.log(id);
+      await riderModel.findByIdAndUpdate(
+        { _id: id },
+        { reviewstatus: "posted" }
+      );
+      global._io.emit("reviewPosted", {
+        reviewId: id,
+        status: "posted", 
+      });
+  
+      res.json("Posted Successfully");
+    } catch (err) {
+      res.status(500).json({ message: "Server error", err });
     }
-}
+  };
+  
 
 const fetchMessage = async (req, res) => {
     try {

@@ -322,6 +322,7 @@ import { useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu'
 import { toast, ToastContainer } from 'react-toastify';
+import socket from './socket';
 const navbarStyles = {
   backgroundColor: 'transparent',
   boxShadow: 'none',
@@ -368,10 +369,21 @@ const HomePage = () => {
   console.log(url);
 
   useEffect(() => {
-    axios.get(`${url}/admin/viewreviews`)
-      .then((res) => setReviews(res.data))
-      .catch((err) => console.log(err));
+    const handleReviewPosted = (data) => {
+      console.log("Received real-time update:", data);
+      axios.get(`${url}/admin/viewreviews`)
+        .then((res) => setReviews(res.data))
+        .catch((err) => console.log(err));
+    };
+  
+    socket.on("reviewPosted", handleReviewPosted);
+  
+    // Cleanup function
+    return () => {
+      socket.off("reviewPosted", handleReviewPosted);
+    };
   }, []);
+  
 
   useEffect(() => {
     gsap.fromTo(".hero-image", { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, ease: "power3.out" });

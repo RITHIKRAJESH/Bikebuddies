@@ -60,7 +60,7 @@ const registerUser = async (req, res) => {
         await sendOTPEmail(email, otp);
           console.log('OTP:', otp);
         res.status(201).json({
-            message: "User registered successfully. Please check your email for the OTP."
+            message: "User registered successfully. Please check your email for the OTP.",user:newUser
         });
     } catch (error) {
         res.status(409).json({ message: error.message });
