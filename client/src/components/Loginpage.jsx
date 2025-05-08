@@ -246,6 +246,7 @@ const LoginPage = () => {
                                     type="email"
                                     required
                                     value={email}
+                                    name="email"
                                     onChange={(e) => setEmail(e.target.value)}
                                     error={!!emailError}
                                     helperText={emailError}
@@ -280,6 +281,7 @@ const LoginPage = () => {
                                 color="primary"
                                 sx={{ mt: 2 }}
                                 onClick={handleSubmit}
+                                name="otpbutton"
                             >
                                 {isOtpSent ? 'Verify OTP' : 'Send OTP'}
                             </Button>

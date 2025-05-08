@@ -591,12 +591,10 @@ const BookRide = () => {
   const navigate=useNavigate()
   const displayRoute = (encodedPolyline) => {
     if (!mapInstance.current || !platformRef.current) return;
-
     const lineString = window.H.geo.LineString.fromFlexiblePolyline(encodedPolyline);
     const routePolyline = new window.H.map.Polyline(lineString, {
       style: { strokeColor: "blue", lineWidth: 5 },
     });
-
     mapInstance.current.addObject(routePolyline);
     mapInstance.current.getViewModel().setLookAtData({ bounds: routePolyline.getBoundingBox() });
   };
